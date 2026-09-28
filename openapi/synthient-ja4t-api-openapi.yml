@@ -1,0 +1,529 @@
+openapi: 3.2.0
+info:
+  title: Synthient JA4T API
+  version: 1.0.0
+  description: Synthient API for IP enrichment, account management, and real-time data feeds.
+servers:
+- url: /api/v4
+  description: Versioned HTTP API base path
+tags:
+- name: JA4T
+  description: JA4T TCP-layer fingerprint sightings attributed to source IPs with provider, country, and ASN enrichment. One real-time stream and one parquet export.
+paths:
+  /feeds/ja4t/export:
+    get:
+      operationId: listJA4TExport
+      summary: List ja4t parquet exports
+      description: 'List parquet export feeds for the **ja4t** stream. Returns one page of daily and hourly snapshots, newest-first; pass `next_cursor` back as `cursor` for the next page.
+
+
+        **Required scope:** `JA4T_FEED`. Parquet snapshots land at `{stream}/latest/HH_{stream}.parquet` hourly and are rolled up daily into `{stream}/YYYY/MM/DD/{stream}.parquet` (00:30 UTC).'
+      tags:
+      - JA4T
+      security:
+      - apiKeyAuth: []
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 500
+          default: 100
+        description: Page size. Defaults to 100; values above 500 are clamped.
+      - name: cursor
+        in: query
+        schema:
+          type: string
+        description: Opaque pagination token returned in `next_cursor` of the previous response. Omit on the first page.
+      responses:
+        '200':
+          description: Page of export feeds. Includes `next_cursor` when more pages exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportListResponse'
+        '400':
+          description: Bad cursor or invalid limit
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Unauthorized — missing or invalid API key
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Forbidden — API key lacks `JA4T_FEED`
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /feeds/ja4t/export/{date}:
+    get:
+      operationId: downloadJA4TExport
+      summary: Download a ja4t parquet export
+      description: 'Download a single parquet snapshot for **ja4t**. Returns a 307 redirect to a presigned R2 URL valid for 24 hours. 307 (not 301) because the URL is minted per request and expires — intermediaries must not cache it.
+
+
+        **Required scope:** `JA4T_FEED`. **Columns:** `ip`, `ja4t`, `provider`, `type`, `timestamp`, `country_code`, `asn`.'
+      tags:
+      - JA4T
+      security:
+      - apiKeyAuth: []
+      parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '2026-05-03'
+        description: Either a YYYY-MM-DD date for a daily rollup, or the literal string `latest` for the most recent hourly export.
+      responses:
+        '307':
+          description: Temporary redirect to a 24h presigned download URL on the CDN.
+        '400':
+          description: Bad date format (expected YYYY-MM-DD or 'latest')
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Unauthorized — missing or invalid API key
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Forbidden — API key lacks `JA4T_FEED`
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: No export exists for the requested date. If the date's daily rollup is still being assembled (roughly 00:00–01:30 UTC for the largest streams), the response carries a Retry-After header and a problem detail saying so — the individual hours remain downloadable at /export/{date}/{hour} in the meantime.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /feeds/ja4t/export/{date}/meta:
+    get:
+      operationId: getJA4TExportMeta
+      summary: Get ja4t parquet metadata
+      description: 'Metadata for a single **ja4t** parquet snapshot: SHA-256 checksum, byte size, row count, parquet schema (column names + types), and canonical date. No file body — call the matching `/export/{date}` endpoint to download.
+
+
+        **Required scope:** `JA4T_FEED`.'
+      tags:
+      - JA4T
+      security:
+      - apiKeyAuth: []
+      parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '2026-05-03'
+        description: Either a YYYY-MM-DD date for a daily rollup, or the literal string `latest` for the most recent hourly export.
+      responses:
+        '200':
+          description: Export-feed metadata.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportMetaResponse'
+        '400':
+          description: Bad date format
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Unauthorized — missing or invalid API key
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Forbidden — API key lacks `JA4T_FEED`
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: No export exists for the requested date. If the date's daily rollup is still being assembled (roughly 00:00–01:30 UTC for the largest streams), the response carries a Retry-After header and a problem detail saying so — the individual hours remain downloadable at /export/{date}/{hour} in the meantime.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /feeds/ja4t/export/{date}/{hour}:
+    get:
+      operationId: downloadJA4THourlyExport
+      summary: Download a ja4t hourly parquet export
+      description: 'Download a specific hourly parquet snapshot for **ja4t** by date and hour. Returns a 307 redirect to a presigned R2 URL valid for 24 hours.
+
+
+        Hourly files are transient — shortly after 00:30 UTC they are rolled up into the daily export and the per-hour artifacts are deleted. Hours remain downloadable until their day''s rollup completes (including yesterday''s hours in the window right after midnight UTC); once rolled up, requests return 400 with a note pointing at `/export/{date}` for the daily rollup. The `latest` alias rolls forward each hour and tracks the most recent hourly.
+
+
+        **Required scope:** `JA4T_FEED`. **Columns:** `ip`, `ja4t`, `provider`, `type`, `timestamp`, `country_code`, `asn`.'
+      tags:
+      - JA4T
+      security:
+      - apiKeyAuth: []
+      parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '2026-05-03'
+        description: Either a YYYY-MM-DD date for a daily rollup, or the literal string `latest` for the most recent hourly export.
+      - name: hour
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 14
+          minimum: 0
+          maximum: 23
+        description: Hour of day (UTC) — integer 0..23. Identifies the specific hourly snapshot for `{date}`.
+      responses:
+        '307':
+          description: Temporary redirect to a 24h presigned download URL on the CDN.
+        '400':
+          description: Bad date format, hour out of range (0..23), or the hour has already been rolled into the daily export (request /export/{date} instead)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Unauthorized — missing or invalid API key
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Forbidden — API key lacks `JA4T_FEED`
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: No hourly export exists for the requested hour
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /feeds/ja4t/export/{date}/{hour}/meta:
+    get:
+      operationId: getJA4THourlyExportMeta
+      summary: Get ja4t hourly parquet metadata
+      description: 'Metadata for one hourly **ja4t** parquet snapshot identified by date and hour. Same shape as the daily `/meta` response.
+
+
+        Hourly metadata is available while the hour''s file exists — including yesterday''s hours until their daily rollup completes. Once rolled up, request the daily `/export/{date}/meta` instead.
+
+
+        **Required scope:** `JA4T_FEED`.'
+      tags:
+      - JA4T
+      security:
+      - apiKeyAuth: []
+      parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '2026-05-03'
+        description: Either a YYYY-MM-DD date for a daily rollup, or the literal string `latest` for the most recent hourly export.
+      - name: hour
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 14
+          minimum: 0
+          maximum: 23
+        description: Hour of day (UTC) — integer 0..23. Identifies the specific hourly snapshot for `{date}`.
+      responses:
+        '200':
+          description: Export-feed metadata.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportMetaResponse'
+        '400':
+          description: Bad date format, hour out of range (0..23), or date is not the current UTC date
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Unauthorized — missing or invalid API key
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Forbidden — API key lacks `JA4T_FEED`
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: No hourly export exists for the requested hour
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /feeds/ja4t/stream:
+    get:
+      operationId: streamJA4T
+      summary: Stream JA4T TCP fingerprint sightings in real time
+      description: 'Real-time NDJSON stream of JA4T (TCP fingerprint) sightings. Each event ties a source IP to a JA4T fingerprint along with provider, country, and ASN enrichment — the TCP-layer counterpart to the JA4 TLS fingerprint feed.
+
+
+        **Required scope:** `JA4T_STREAM`. **Schema:** see `JA4TStreamEntry` under Components.
+
+
+        **Sample event:**
+
+        ```
+
+        {"ip":"109.176.45.49","ja4t":"43080_2-4-8-1-3_1436_9","provider":"PROXYJET_DATACENTER","type":"DATACENTER_PROXY","timestamp":1779818967,"country_code":"US","asn":16276}
+
+        ```'
+      tags:
+      - JA4T
+      security:
+      - apiKeyAuth: []
+      responses:
+        '200':
+          description: NDJSON stream of ja4t events. Each line is a complete JSON object. The connection stays open for up to 30 minutes.
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/JA4TStreamEntry'
+        '401':
+          description: Unauthorized — missing or invalid API key
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Forbidden — API key lacks the required scope for this feed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '429':
+          description: Too many concurrent streams from this client
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '503':
+          description: Service unavailable — streaming backend is down
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+components:
+  schemas:
+    ExportListResponse:
+      type: object
+      properties:
+        feeds:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExportListItem'
+        next_cursor:
+          type: string
+        stream:
+          type: string
+      required:
+      - stream
+      - feeds
+    ProjectedColumn:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+      required:
+      - name
+      - type
+    ExportListItem:
+      type: object
+      properties:
+        checksum:
+          type: string
+        created_at:
+          type: integer
+          format: int64
+        date:
+          type: string
+        download_path:
+          type: string
+        hour:
+          type: integer
+        id:
+          type: string
+        kind:
+          type: string
+        row_count:
+          type: integer
+          format: int64
+        size_bytes:
+          type: integer
+          format: int64
+      required:
+      - kind
+      - date
+      - size_bytes
+      - row_count
+      - checksum
+      - id
+      - created_at
+      - download_path
+    JA4TStreamEntry:
+      type: object
+      properties:
+        asn:
+          type: integer
+          format: int32
+          description: Autonomous System Number of the IP
+        country_code:
+          type: string
+          description: ISO 3166-1 alpha-2 country code of the IP
+        ip:
+          type: string
+          description: IPv4 or IPv6 address of the sighting
+        ja4t:
+          type: string
+          description: JA4T TCP fingerprint
+        provider:
+          type: string
+          description: Provider that surfaced this sighting
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds since epoch, UTC)
+        type:
+          type: string
+          description: ProxyType category (e.g. DATACENTER_PROXY, RESIDENTIAL_PROXY)
+    Schema:
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectedColumn'
+      required:
+      - fields
+    ProblemDetails:
+      type: object
+      properties:
+        detail:
+          type: string
+        instance:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - title
+      - status
+      - detail
+    ExportMetaResponse:
+      type: object
+      properties:
+        checksum:
+          type: string
+        created_at:
+          type: integer
+          format: int64
+        date:
+          type: integer
+          format: int64
+        format:
+          type: string
+        hour:
+          type: integer
+        id:
+          type: string
+        kind:
+          type: string
+        rows:
+          type: integer
+          format: int64
+        schema:
+          $ref: '#/components/schemas/Schema'
+        size:
+          type: integer
+          format: int64
+        stream:
+          type: string
+      required:
+      - checksum
+      - date
+      - format
+      - size
+      - rows
+      - schema
+      - stream
+      - kind
+      - id
+      - created_at
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+      description: Private API key passed in the X-Api-Key header.

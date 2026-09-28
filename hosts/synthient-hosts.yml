@@ -1,0 +1,98 @@
+generated: '2026-09-28'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 6
+  own: 4
+  other_domain: 0
+  platform: 2
+  roles:
+  - api
+  - other
+  - portal
+  - source
+  - website
+hosts:
+- host: api.synthient.com
+  found_by:
+  - apis[]
+  - contract-discovery
+  types: []
+  serves:
+  - api
+  registrable_domain: synthient.com
+  role: api
+  relation: own
+- host: dashboard.synthient.com
+  found_by:
+  - probed
+  - site-links
+  - contract-discovery
+  - well-known
+  types: []
+  serves: []
+  registrable_domain: synthient.com
+  role: other
+  relation: own
+- host: docs.synthient.com
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - site-links
+  - docs-index
+  - contract-discovery
+  - well-known
+  types:
+  - Documentation
+  - DeveloperPortal
+  - APIReference
+  - GettingStarted
+  - SDK
+  serves:
+  - docs
+  registrable_domain: synthient.com
+  role: portal
+  relation: own
+- host: github.com
+  found_by:
+  - pointer
+  types:
+  - GitHubOrganization
+  serves: []
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: synthient.com
+  found_by:
+  - pointer
+  - probed
+  - docs-index
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types:
+  - Security
+  - TermsOfService
+  - StatusPage
+  - PrivacyPolicy
+  - Pricing
+  - Blog
+  - Website
+  serves:
+  - docs
+  - cdn
+  vendor: cloudflare
+  registrable_domain: synthient.com
+  role: website
+  relation: own
+- host: x.com
+  found_by:
+  - pointer
+  types:
+  - SocialX
+  serves: []
+  registrable_domain: x.com
+  role: other
+  relation: platform

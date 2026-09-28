@@ -1,0 +1,78 @@
+generated: '2026-09-28'
+method: derived
+generator: derive-problem-types.py
+source:
+- openapi/synthient-openapi.json
+format: rfc9457
+envelope:
+  media_type: application/problem+json
+  schema: ProblemDetails
+coverage:
+  operations: 53
+  statuses_declared: 9
+problems:
+- status: 400
+  title: Bad Request
+  description: Bad cursor or invalid limit
+  operations: 40
+  media_types:
+  - application/problem+json
+  schema: ProblemDetails
+- status: 401
+  title: Unauthorized
+  description: Unauthorized — missing or invalid API key
+  operations: 52
+  media_types:
+  - application/problem+json
+  schema: ProblemDetails
+- status: 402
+  title: Payment Required
+  description: Payment Required - Quota exhausted
+  operations: 2
+  media_types:
+  - application/problem+json
+  schema: ProblemDetails
+- status: 403
+  title: Forbidden
+  description: Forbidden — API key lacks the required scope for this feed
+  operations: 48
+  media_types:
+  - application/problem+json
+  schema: ProblemDetails
+- status: 404
+  title: Not Found
+  description: No export exists for the requested date. If the date's daily rollup is still being assembled (roughly
+    00:00–01:30 UTC for the largest stream
+  operations: 32
+  media_types:
+  - application/problem+json
+  schema: ProblemDetails
+- status: 422
+  title: Unprocessable Content
+  description: Validation error (bad domain syntax, too long)
+  operations: 3
+  media_types:
+  - application/problem+json
+  schema: ValidationProblemDetails
+- status: 429
+  title: Too Many Requests
+  description: Too many concurrent streams from this client
+  operations: 9
+  media_types:
+  - application/problem+json
+  schema: ProblemDetails
+- status: 500
+  title: Internal Server Error
+  description: Internal server error
+  operations: 52
+  media_types:
+  - application/problem+json
+  schema: ProblemDetails
+- status: 503
+  title: Service Unavailable
+  description: Service unavailable — streaming backend is down
+  operations: 10
+  media_types:
+  - application/problem+json
+  - application/json
+  schema: ProblemDetails

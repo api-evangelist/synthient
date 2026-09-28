@@ -1,0 +1,20 @@
+generated: '2026-09-28'
+method: derived
+source: https://docs.synthient.com/ai/mcp
+crosswalk:
+  - tool: synthient-mcp
+    category: lookup
+    rest:
+      - domainLookup
+      - downloadAnonymizersExport
+      - downloadAnonymizersHourlyExport
+      - downloadHoneypotADBExport
+      - downloadHoneypotADBHourlyExport
+      - downloadHoneypotDNSExport
+      - downloadHoneypotDNSHourlyExport
+      - downloadHoneypotHTTPExport
+      - downloadHoneypotHTTPHourlyExport
+      - downloadHoneypotHTTPSExport
+    binding: direct
+    confidence: high
+    note: MCP stdio tool maps directly to OpenAPI operationIds

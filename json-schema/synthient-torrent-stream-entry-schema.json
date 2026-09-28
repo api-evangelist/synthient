@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/synthient/main/json-schema/synthient-torrent-stream-entry-schema.json",
+  "title": "TorrentStreamEntry",
+  "x-generated": "2026-09-28",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/synthient-openapi.json#/components/schemas/TorrentStreamEntry",
+  "type": "object",
+  "properties": {
+    "file_count": {
+      "type": "integer"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/TorrentFileEntry"
+      }
+    },
+    "info_hash": {
+      "type": "string",
+      "description": "40-character hex SHA-1 info hash"
+    },
+    "magnet_uri": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "description": "Torrent name from metadata"
+    },
+    "peers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/TorrentPeerEntry"
+      }
+    },
+    "piece_length": {
+      "type": "integer"
+    },
+    "timestamp": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Unix timestamp (seconds since epoch, UTC)"
+    },
+    "total_size": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Total size of files in bytes"
+    }
+  },
+  "$defs": {
+    "TorrentFileEntry": {
+      "type": "object",
+      "properties": {
+        "length": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "path": {
+          "type": "string"
+        }
+      }
+    },
+    "TorrentPeerEntry": {
+      "type": "object",
+      "properties": {
+        "encrypted": {
+          "type": "boolean"
+        },
+        "ip": {
+          "type": "string",
+          "description": "IPv4 or IPv6 address of the peer"
+        },
+        "port": {
+          "type": "integer"
+        },
+        "source": {
+          "type": "string",
+          "description": "DHT, PEX, or tracker"
+        }
+      }
+    }
+  }
+}

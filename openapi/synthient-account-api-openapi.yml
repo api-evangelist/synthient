@@ -1,0 +1,165 @@
+openapi: 3.2.0
+info:
+  title: Synthient Account API
+  version: 1.0.0
+  description: Synthient API for IP enrichment, account management, and real-time data feeds.
+servers:
+- url: /api/v4
+  description: Versioned HTTP API base path
+tags:
+- name: Account
+  description: Account info, quota, and the public health probe.
+paths:
+  /account/me:
+    get:
+      operationId: getAccountInfo
+      summary: Get account info
+      description: Return the authenticated account's scopes and remaining quota.
+      tags:
+      - Account
+      security:
+      - apiKeyAuth: []
+      responses:
+        '200':
+          description: Account info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountInfoResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /health:
+    get:
+      operationId: healthCheck
+      summary: Health check
+      description: Liveness check for the API. Returns `ok` when all dependencies are reachable.
+      tags:
+      - Account
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+        '503':
+          description: Service is unhealthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  problems:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    example: unhealthy
+components:
+  schemas:
+    AccountAPIKey:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+      required:
+      - id
+      - name
+      - created_at
+    LookupQuota:
+      type: object
+      properties:
+        credits:
+          type: integer
+          format: int64
+        resets_in:
+          type: integer
+          format: int64
+      required:
+      - credits
+      - resets_in
+    ProblemDetails:
+      type: object
+      properties:
+        detail:
+          type: string
+        instance:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - title
+      - status
+      - detail
+    AccountInfoResponse:
+      type: object
+      properties:
+        api_key:
+          $ref: '#/components/schemas/AccountAPIKey'
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        lookup_quota:
+          $ref: '#/components/schemas/LookupQuota'
+        organization:
+          $ref: '#/components/schemas/Organization'
+        scopes:
+          type: array
+          items:
+            type: string
+      required:
+      - first_name
+      - last_name
+      - email
+      - organization
+      - scopes
+      - lookup_quota
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        relation:
+          type: string
+      required:
+      - id
+      - name
+      - relation
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+      description: Private API key passed in the X-Api-Key header.

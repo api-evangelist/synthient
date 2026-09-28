@@ -1,0 +1,60 @@
+generated: '2026-09-28'
+method: searched
+generator: extract-docs-artifacts.py (local)
+source: https://docs.synthient.com/sdk
+sources:
+- https://docs.synthient.com/sdk
+- https://docs.synthient.com/cli
+install:
+- method: Homebrew
+  command: brew install synthient/tap/synthient
+- method: Go
+  command: go install github.com/synthient/cli/cmd/synthient@latest
+commands:
+- group: auth
+  commands:
+  - auth
+  - auth --logout
+  purpose: Store or remove an API key in the OS keychain
+- group: status
+  commands:
+  - status
+  purpose: Config, auth source, endpoint, quota, and scope status
+- group: account
+  commands:
+  - account
+  purpose: Account, scope, and quota details
+- group: scopes
+  commands:
+  - scopes
+  purpose: Show which Synthient scopes the active key holds
+- group: lookup
+  commands:
+  - lookup
+  - lookup ip
+  - lookup domain
+  purpose: IP and domain intelligence
+- group: feeds
+  commands:
+  - feeds streams
+  - feeds snapshots
+  - feeds meta
+  - feeds schema
+  - feeds checksum
+  - feeds download
+  - download
+  purpose: List streams, list snapshots, view metadata/schema, get checksum, download snapshots
+- group: stream
+  commands:
+  - stream
+  purpose: Stream live NDJSON feed events
+- group: grpc
+  commands:
+  - grpc schema
+  purpose: Output protobuf descriptors via gRPC reflection
+- group: mcp
+  commands:
+  - mcp
+  purpose: Run a Model Context Protocol server over stdio
+binary: synthient
+docs: https://docs.synthient.com/sdk

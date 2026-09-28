@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/synthient/main/json-schema/synthient-proxy-stream-entry-schema.json",
+  "title": "ProxyStreamEntry",
+  "description": "A single proxy event from the real-time proxy stream.",
+  "x-generated": "2026-09-28",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/synthient-openapi.json#/components/schemas/ProxyStreamEntry",
+  "type": "object",
+  "properties": {
+    "asn": {
+      "type": "integer",
+      "format": "int32",
+      "description": "Autonomous System Number of the proxy IP"
+    },
+    "country_code": {
+      "type": "string",
+      "description": "ISO 3166-1 alpha-2 country code of the proxy IP"
+    },
+    "ip": {
+      "type": "string",
+      "description": "IPv4 or IPv6 address of the proxy"
+    },
+    "provider": {
+      "type": "string",
+      "description": "Provider name"
+    },
+    "timestamp": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Unix timestamp (seconds since epoch, UTC)"
+    },
+    "type": {
+      "type": "string",
+      "description": "Proxy type (e.g. residential, datacenter, mobile)"
+    }
+  }
+}

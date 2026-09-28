@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/synthient/main/json-schema/synthient-ja4-tstream-entry-schema.json",
+  "title": "JA4TStreamEntry",
+  "x-generated": "2026-09-28",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/synthient-openapi.json#/components/schemas/JA4TStreamEntry",
+  "type": "object",
+  "properties": {
+    "asn": {
+      "type": "integer",
+      "format": "int32",
+      "description": "Autonomous System Number of the IP"
+    },
+    "country_code": {
+      "type": "string",
+      "description": "ISO 3166-1 alpha-2 country code of the IP"
+    },
+    "ip": {
+      "type": "string",
+      "description": "IPv4 or IPv6 address of the sighting"
+    },
+    "ja4t": {
+      "type": "string",
+      "description": "JA4T TCP fingerprint"
+    },
+    "provider": {
+      "type": "string",
+      "description": "Provider that surfaced this sighting"
+    },
+    "timestamp": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Unix timestamp (seconds since epoch, UTC)"
+    },
+    "type": {
+      "type": "string",
+      "description": "ProxyType category (e.g. DATACENTER_PROXY, RESIDENTIAL_PROXY)"
+    }
+  }
+}

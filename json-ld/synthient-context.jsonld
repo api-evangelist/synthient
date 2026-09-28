@@ -1,0 +1,569 @@
+{
+  "@context": {
+    "@vocab": "https://synthient.com/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "synthient": "https://synthient.com/schema#",
+    "ASNEntry": "synthient:ASNEntry",
+    "asn": {
+      "@id": "synthient:asn",
+      "@type": "xsd:integer"
+    },
+    "events": {
+      "@id": "synthient:events",
+      "@type": "xsd:integer"
+    },
+    "AccountAPIKey": "synthient:AccountAPIKey",
+    "created_at": {
+      "@id": "synthient:created_at",
+      "@type": "xsd:dateTime"
+    },
+    "id": {
+      "@id": "synthient:id",
+      "@type": "xsd:string"
+    },
+    "name": {
+      "@id": "synthient:name",
+      "@type": "xsd:string"
+    },
+    "AccountInfoResponse": "synthient:AccountInfoResponse",
+    "api_key": {
+      "@id": "synthient:api_key",
+      "@type": "@id"
+    },
+    "email": {
+      "@id": "synthient:email",
+      "@type": "xsd:string"
+    },
+    "first_name": {
+      "@id": "synthient:first_name",
+      "@type": "xsd:string"
+    },
+    "last_name": {
+      "@id": "synthient:last_name",
+      "@type": "xsd:string"
+    },
+    "lookup_quota": {
+      "@id": "synthient:lookup_quota",
+      "@type": "@id"
+    },
+    "organization": {
+      "@id": "synthient:organization",
+      "@type": "@id"
+    },
+    "scopes": {
+      "@id": "synthient:scopes",
+      "@container": "@list"
+    },
+    "ActivityStatsBlock": "synthient:ActivityStatsBlock",
+    "cadence": {
+      "@id": "synthient:cadence",
+      "@type": "xsd:string"
+    },
+    "median_per_hour": {
+      "@id": "synthient:median_per_hour",
+      "@type": "xsd:integer"
+    },
+    "p95_per_hour": {
+      "@id": "synthient:p95_per_hour",
+      "@type": "xsd:integer"
+    },
+    "peak_hour": {
+      "@id": "synthient:peak_hour",
+      "@type": "xsd:integer"
+    },
+    "quiet_hour": {
+      "@id": "synthient:quiet_hour",
+      "@type": "xsd:integer"
+    },
+    "AnonymizerStreamEntry": "synthient:AnonymizerStreamEntry",
+    "country_code": {
+      "@id": "synthient:country_code",
+      "@type": "xsd:string"
+    },
+    "provider": {
+      "@id": "synthient:provider",
+      "@type": "xsd:string"
+    },
+    "range_end": {
+      "@id": "synthient:range_end",
+      "@type": "xsd:string"
+    },
+    "range_start": {
+      "@id": "synthient:range_start",
+      "@type": "xsd:string"
+    },
+    "timestamp": {
+      "@id": "synthient:timestamp",
+      "@type": "xsd:integer"
+    },
+    "type": {
+      "@id": "synthient:type",
+      "@type": "xsd:string"
+    },
+    "CountryEntry": "synthient:CountryEntry",
+    "unique_ips": {
+      "@id": "synthient:unique_ips",
+      "@type": "xsd:integer"
+    },
+    "DeviceInfo": "synthient:DeviceInfo",
+    "last_seen": {
+      "@id": "synthient:last_seen",
+      "@type": "xsd:integer"
+    },
+    "os": {
+      "@id": "synthient:os",
+      "@type": "xsd:string"
+    },
+    "version": {
+      "@id": "synthient:version",
+      "@type": "xsd:string"
+    },
+    "DomainLookupResponse": "synthient:DomainLookupResponse",
+    "activity_stats": {
+      "@id": "synthient:activity_stats",
+      "@type": "@id"
+    },
+    "domain": {
+      "@id": "synthient:domain",
+      "@type": "xsd:string"
+    },
+    "geo_distribution": {
+      "@id": "synthient:geo_distribution",
+      "@container": "@list"
+    },
+    "hour_dow_heatmap": {
+      "@id": "synthient:hour_dow_heatmap",
+      "@container": "@list"
+    },
+    "recent_events": {
+      "@id": "synthient:recent_events",
+      "@container": "@list"
+    },
+    "stats": {
+      "@id": "synthient:stats",
+      "@type": "@id"
+    },
+    "status": {
+      "@id": "synthient:status",
+      "@type": "xsd:string"
+    },
+    "time_series": {
+      "@id": "synthient:time_series",
+      "@container": "@list"
+    },
+    "top_asn": {
+      "@id": "synthient:top_asn",
+      "@type": "@id"
+    },
+    "top_ports": {
+      "@id": "synthient:top_ports",
+      "@container": "@list"
+    },
+    "top_subdomains": {
+      "@id": "synthient:top_subdomains",
+      "@container": "@list"
+    },
+    "ExportListItem": "synthient:ExportListItem",
+    "checksum": {
+      "@id": "synthient:checksum",
+      "@type": "xsd:string"
+    },
+    "date": {
+      "@id": "synthient:date",
+      "@type": "xsd:string"
+    },
+    "download_path": {
+      "@id": "synthient:download_path",
+      "@type": "xsd:string"
+    },
+    "hour": {
+      "@id": "synthient:hour",
+      "@type": "xsd:integer"
+    },
+    "kind": {
+      "@id": "synthient:kind",
+      "@type": "xsd:string"
+    },
+    "row_count": {
+      "@id": "synthient:row_count",
+      "@type": "xsd:integer"
+    },
+    "size_bytes": {
+      "@id": "synthient:size_bytes",
+      "@type": "xsd:integer"
+    },
+    "ExportListResponse": "synthient:ExportListResponse",
+    "feeds": {
+      "@id": "synthient:feeds",
+      "@container": "@list"
+    },
+    "next_cursor": {
+      "@id": "synthient:next_cursor",
+      "@type": "xsd:string"
+    },
+    "stream": {
+      "@id": "synthient:stream",
+      "@type": "xsd:string"
+    },
+    "ExportMetaResponse": "synthient:ExportMetaResponse",
+    "format": {
+      "@id": "synthient:format",
+      "@type": "xsd:string"
+    },
+    "rows": {
+      "@id": "synthient:rows",
+      "@type": "xsd:integer"
+    },
+    "size": {
+      "@id": "synthient:size",
+      "@type": "xsd:integer"
+    },
+    "HoneypotADBStreamEntry": "synthient:HoneypotADBStreamEntry",
+    "command": {
+      "@id": "synthient:command",
+      "@type": "xsd:string"
+    },
+    "hash": {
+      "@id": "synthient:hash",
+      "@type": "xsd:string"
+    },
+    "sequential_id": {
+      "@id": "synthient:sequential_id",
+      "@type": "xsd:integer"
+    },
+    "session": {
+      "@id": "synthient:session",
+      "@type": "xsd:string"
+    },
+    "HoneypotDNSStreamEntry": "synthient:HoneypotDNSStreamEntry",
+    "meta": {
+      "@id": "synthient:meta",
+      "@type": "@id"
+    },
+    "port": {
+      "@id": "synthient:port",
+      "@type": "xsd:integer"
+    },
+    "tunnel_id": {
+      "@id": "synthient:tunnel_id",
+      "@type": "xsd:integer"
+    },
+    "HoneypotHTTPSStreamEntry": "synthient:HoneypotHTTPSStreamEntry",
+    "details": {
+      "@id": "synthient:details",
+      "@type": "xsd:string"
+    },
+    "raw": {
+      "@id": "synthient:raw",
+      "@type": "xsd:string"
+    },
+    "HoneypotHTTPStreamEntry": "synthient:HoneypotHTTPStreamEntry",
+    "HoneypotMeta": "synthient:HoneypotMeta",
+    "pool_id": {
+      "@id": "synthient:pool_id",
+      "@type": "xsd:string"
+    },
+    "proxy_ip": {
+      "@id": "synthient:proxy_ip",
+      "@type": "xsd:string"
+    },
+    "server": {
+      "@id": "synthient:server",
+      "@type": "xsd:string"
+    },
+    "IntelligenceInfo": "synthient:IntelligenceInfo",
+    "behavior": {
+      "@id": "synthient:behavior",
+      "@container": "@list"
+    },
+    "categories": {
+      "@id": "synthient:categories",
+      "@container": "@list"
+    },
+    "devices": {
+      "@id": "synthient:devices",
+      "@container": "@list"
+    },
+    "providers": {
+      "@id": "synthient:providers",
+      "@container": "@list"
+    },
+    "risk_score": {
+      "@id": "synthient:risk_score",
+      "@type": "xsd:integer"
+    },
+    "IpBatchRequest": "synthient:IpBatchRequest",
+    "ips": {
+      "@id": "synthient:ips",
+      "@container": "@list"
+    },
+    "IpBatchResponse": "synthient:IpBatchResponse",
+    "results": {
+      "@id": "synthient:results",
+      "@container": "@list"
+    },
+    "IpProvidersResponse": "synthient:IpProvidersResponse",
+    "intelligence": {
+      "@id": "synthient:intelligence",
+      "@type": "@id"
+    },
+    "ip": {
+      "@id": "synthient:ip",
+      "@type": "xsd:string"
+    },
+    "location": {
+      "@id": "synthient:location",
+      "@type": "@id"
+    },
+    "network": {
+      "@id": "synthient:network",
+      "@type": "@id"
+    },
+    "JA3StreamEntry": "synthient:JA3StreamEntry",
+    "address": {
+      "@id": "synthient:address",
+      "@type": "xsd:string"
+    },
+    "host": {
+      "@id": "synthient:host",
+      "@type": "xsd:string"
+    },
+    "ja3n": {
+      "@id": "synthient:ja3n",
+      "@type": "xsd:string"
+    },
+    "ja4": {
+      "@id": "synthient:ja4",
+      "@type": "xsd:string"
+    },
+    "ja4h": {
+      "@id": "synthient:ja4h",
+      "@type": "xsd:string"
+    },
+    "protocol": {
+      "@id": "synthient:protocol",
+      "@type": "xsd:string"
+    },
+    "secure": {
+      "@id": "synthient:secure",
+      "@type": "xsd:boolean"
+    },
+    "user_agent": {
+      "@id": "synthient:user_agent",
+      "@type": "xsd:string"
+    },
+    "JA4StreamEntry": "synthient:JA4StreamEntry",
+    "ch_server_name": {
+      "@id": "synthient:ch_server_name",
+      "@type": "xsd:string"
+    },
+    "event_id": {
+      "@id": "synthient:event_id",
+      "@type": "xsd:string"
+    },
+    "ja4_r": {
+      "@id": "synthient:ja4_r",
+      "@type": "xsd:string"
+    },
+    "ja4h_r": {
+      "@id": "synthient:ja4h_r",
+      "@type": "xsd:string"
+    },
+    "ja4l": {
+      "@id": "synthient:ja4l",
+      "@type": "xsd:string"
+    },
+    "ja4t": {
+      "@id": "synthient:ja4t",
+      "@type": "xsd:string"
+    },
+    "url_path": {
+      "@id": "synthient:url_path",
+      "@type": "xsd:string"
+    },
+    "JA4TStreamEntry": "synthient:JA4TStreamEntry",
+    "LocationInfo": "synthient:LocationInfo",
+    "city": {
+      "@id": "synthient:city",
+      "@type": "xsd:string"
+    },
+    "country": {
+      "@id": "synthient:country",
+      "@type": "xsd:string"
+    },
+    "geo_hash": {
+      "@id": "synthient:geo_hash",
+      "@type": "xsd:string"
+    },
+    "latitude": {
+      "@id": "synthient:latitude",
+      "@type": "xsd:decimal"
+    },
+    "longitude": {
+      "@id": "synthient:longitude",
+      "@type": "xsd:decimal"
+    },
+    "state": {
+      "@id": "synthient:state",
+      "@type": "xsd:string"
+    },
+    "timezone": {
+      "@id": "synthient:timezone",
+      "@type": "xsd:string"
+    },
+    "LookupQuota": "synthient:LookupQuota",
+    "credits": {
+      "@id": "synthient:credits",
+      "@type": "xsd:integer"
+    },
+    "resets_in": {
+      "@id": "synthient:resets_in",
+      "@type": "xsd:integer"
+    },
+    "NetworkInfo": "synthient:NetworkInfo",
+    "abuse_email": {
+      "@id": "synthient:abuse_email",
+      "@type": "xsd:string"
+    },
+    "abuse_phone": {
+      "@id": "synthient:abuse_phone",
+      "@type": "xsd:string"
+    },
+    "isp": {
+      "@id": "synthient:isp",
+      "@type": "xsd:string"
+    },
+    "org": {
+      "@id": "synthient:org",
+      "@type": "xsd:string"
+    },
+    "Organization": "synthient:Organization",
+    "relation": {
+      "@id": "synthient:relation",
+      "@type": "xsd:string"
+    },
+    "PortEntry": "synthient:PortEntry",
+    "count": {
+      "@id": "synthient:count",
+      "@type": "xsd:integer"
+    },
+    "ProblemDetails": "synthient:ProblemDetails",
+    "detail": {
+      "@id": "synthient:detail",
+      "@type": "xsd:string"
+    },
+    "instance": {
+      "@id": "synthient:instance",
+      "@type": "xsd:string"
+    },
+    "title": {
+      "@id": "synthient:title",
+      "@type": "xsd:string"
+    },
+    "ProjectedColumn": "synthient:ProjectedColumn",
+    "ProviderEntry": "synthient:ProviderEntry",
+    "ProxyStreamEntry": "synthient:ProxyStreamEntry",
+    "RecentEvent": "synthient:RecentEvent",
+    "source_ip_masked": {
+      "@id": "synthient:source_ip_masked",
+      "@type": "xsd:string"
+    },
+    "target_subdomain": {
+      "@id": "synthient:target_subdomain",
+      "@type": "xsd:string"
+    },
+    "Schema": "synthient:Schema",
+    "fields": {
+      "@id": "synthient:fields",
+      "@container": "@list"
+    },
+    "Stats": "synthient:Stats",
+    "events_24h": {
+      "@id": "synthient:events_24h",
+      "@type": "xsd:integer"
+    },
+    "total_events_30d": {
+      "@id": "synthient:total_events_30d",
+      "@type": "xsd:integer"
+    },
+    "SubdomainEntry": "synthient:SubdomainEntry",
+    "subdomain": {
+      "@id": "synthient:subdomain",
+      "@type": "xsd:string"
+    },
+    "TimeSeriesEntry": "synthient:TimeSeriesEntry",
+    "TorrentFileEntry": "synthient:TorrentFileEntry",
+    "length": {
+      "@id": "synthient:length",
+      "@type": "xsd:integer"
+    },
+    "path": {
+      "@id": "synthient:path",
+      "@type": "xsd:string"
+    },
+    "TorrentPeerEntry": "synthient:TorrentPeerEntry",
+    "encrypted": {
+      "@id": "synthient:encrypted",
+      "@type": "xsd:boolean"
+    },
+    "source": {
+      "@id": "synthient:source",
+      "@type": "xsd:string"
+    },
+    "TorrentStreamEntry": "synthient:TorrentStreamEntry",
+    "file_count": {
+      "@id": "synthient:file_count",
+      "@type": "xsd:integer"
+    },
+    "files": {
+      "@id": "synthient:files",
+      "@container": "@list"
+    },
+    "info_hash": {
+      "@id": "synthient:info_hash",
+      "@type": "xsd:string"
+    },
+    "magnet_uri": {
+      "@id": "synthient:magnet_uri",
+      "@type": "xsd:string"
+    },
+    "peers": {
+      "@id": "synthient:peers",
+      "@container": "@list"
+    },
+    "piece_length": {
+      "@id": "synthient:piece_length",
+      "@type": "xsd:integer"
+    },
+    "total_size": {
+      "@id": "synthient:total_size",
+      "@type": "xsd:integer"
+    },
+    "UniqueIPsBlock": "synthient:UniqueIPsBlock",
+    "sparkline_24h": {
+      "@id": "synthient:sparkline_24h",
+      "@container": "@list"
+    },
+    "value_24h": {
+      "@id": "synthient:value_24h",
+      "@type": "xsd:integer"
+    },
+    "value_30d": {
+      "@id": "synthient:value_30d",
+      "@type": "xsd:integer"
+    },
+    "ValidationProblemDetails": "synthient:ValidationProblemDetails",
+    "errors": {
+      "@id": "synthient:errors"
+    }
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "Synthient API API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects Synthient API's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-09-28) from openapi/synthient-openapi.json.",
+  "dcterms:created": "2026-09-28",
+  "dcterms:source": [
+    "openapi/synthient-openapi.json"
+  ]
+}

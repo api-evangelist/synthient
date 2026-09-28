@@ -1,0 +1,538 @@
+openapi: 3.2.0
+info:
+  title: Synthient Lookup API
+  version: 1.0.0
+  description: Synthient API for IP enrichment, account management, and real-time data feeds.
+servers:
+- url: /api/v4
+  description: Versioned HTTP API base path
+tags:
+- name: Lookup
+  description: Single-IP, batch-IP, and domain enrichment endpoints.
+paths:
+  /lookup/domain/{domain}:
+    get:
+      operationId: domainLookup
+      summary: Look up honeypot intelligence for a domain
+      description: 'Return honeypot intelligence for a domain: aggregate stats, a daily time series, unique-IP block, top ASN/subdomains/ports, geo distribution, an hour×day-of-week activity heatmap, derived activity stats, and the most recent events.'
+      tags:
+      - Lookup
+      security:
+      - apiKeyAuth: []
+      parameters:
+      - name: domain
+        in: path
+        required: true
+        schema:
+          type: string
+          example: google.com
+        description: Domain name to look up. Encode internationalised names as Punycode (xn--…).
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 50
+        description: Maximum number of recent_events rows to return. Defaults to 50; values above 1000 are clamped server-side.
+      responses:
+        '200':
+          description: Domain intelligence result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainLookupResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '402':
+          description: Payment Required - Quota exhausted
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '422':
+          description: Validation error (bad domain syntax, too long)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationProblemDetails'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '503':
+          description: Service unavailable (lookup deadline exceeded or backend offline)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /lookup/ip/{ip_address}:
+    get:
+      operationId: ipLookup
+      summary: Look up providers for an IP address
+      description: Return the proxy, VPN, and anonymizer providers associated with a single IP address.
+      tags:
+      - Lookup
+      security:
+      - apiKeyAuth: []
+      parameters:
+      - name: ip_address
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 8.8.8.8
+        description: IPv4 or IPv6 address to look up
+      responses:
+        '200':
+          description: IP providers result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IpProvidersResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '422':
+          description: Validation error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationProblemDetails'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /lookup/ips:
+    post:
+      operationId: lookupIpBatch
+      summary: Enrich multiple IP addresses
+      description: Enrich up to 1,000 IP addresses in a single request. Billed at a 10% discount (ceil(n × 0.9) credits); duplicates and invalid IPs are excluded before charging.
+      tags:
+      - Lookup
+      security:
+      - apiKeyAuth: []
+      requestBody:
+        description: Batch IP lookup request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IpBatchRequest'
+      responses:
+        '200':
+          description: Successful batch lookup
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IpBatchResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '402':
+          description: Payment Required - Quota exhausted
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '422':
+          description: Validation Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+components:
+  schemas:
+    TimeSeriesEntry:
+      type: object
+      properties:
+        date:
+          type: integer
+          format: int64
+        events:
+          type: integer
+          format: int64
+        unique_ips:
+          type: integer
+          format: int64
+      required:
+      - date
+      - events
+      - unique_ips
+    SubdomainEntry:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int64
+        subdomain:
+          type: string
+      required:
+      - subdomain
+      - count
+    ProblemDetails:
+      type: object
+      properties:
+        detail:
+          type: string
+        instance:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - title
+      - status
+      - detail
+    Stats:
+      type: object
+      properties:
+        events_24h:
+          type: integer
+          format: int64
+        total_events_30d:
+          type: integer
+          format: int64
+      required:
+      - total_events_30d
+      - events_24h
+    IntelligenceInfo:
+      type: object
+      properties:
+        behavior:
+          type: array
+          items:
+            type: string
+        categories:
+          type: array
+          items:
+            type: string
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceInfo'
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderEntry'
+        risk_score:
+          type: integer
+      required:
+      - risk_score
+      - devices
+      - behavior
+      - categories
+      - providers
+    IpProvidersResponse:
+      type: object
+      properties:
+        intelligence:
+          $ref: '#/components/schemas/IntelligenceInfo'
+        ip:
+          type: string
+        location:
+          $ref: '#/components/schemas/LocationInfo'
+        network:
+          $ref: '#/components/schemas/NetworkInfo'
+      required:
+      - ip
+    NetworkInfo:
+      type: object
+      properties:
+        abuse_email:
+          type: string
+        abuse_phone:
+          type: string
+        asn:
+          type: integer
+        domain:
+          type: string
+        isp:
+          type: string
+        org:
+          type: string
+        type:
+          type: string
+      required:
+      - asn
+      - isp
+      - type
+    LocationInfo:
+      type: object
+      properties:
+        city:
+          type: string
+        country:
+          type: string
+        geo_hash:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        state:
+          type: string
+        timezone:
+          type: string
+      required:
+      - country
+      - state
+      - city
+      - timezone
+      - longitude
+      - latitude
+      - geo_hash
+    CountryEntry:
+      type: object
+      properties:
+        country_code:
+          type: string
+        events:
+          type: integer
+          format: int64
+        unique_ips:
+          type: integer
+          format: int64
+      required:
+      - country_code
+      - unique_ips
+      - events
+    DomainLookupResponse:
+      type: object
+      properties:
+        activity_stats:
+          $ref: '#/components/schemas/ActivityStatsBlock'
+        domain:
+          type: string
+        geo_distribution:
+          type: array
+          items:
+            $ref: '#/components/schemas/CountryEntry'
+        hour_dow_heatmap:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
+              format: int64
+        recent_events:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecentEvent'
+        stats:
+          $ref: '#/components/schemas/Stats'
+        status:
+          type: string
+        time_series:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeSeriesEntry'
+        top_asn:
+          $ref: '#/components/schemas/ASNEntry'
+        top_ports:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortEntry'
+        top_subdomains:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubdomainEntry'
+        unique_ips:
+          $ref: '#/components/schemas/UniqueIPsBlock'
+      required:
+      - domain
+      - status
+      - stats
+      - time_series
+      - unique_ips
+      - top_subdomains
+      - top_ports
+      - geo_distribution
+      - hour_dow_heatmap
+      - activity_stats
+      - recent_events
+    ActivityStatsBlock:
+      type: object
+      properties:
+        cadence:
+          type: string
+        median_per_hour:
+          type: integer
+          format: int64
+        p95_per_hour:
+          type: integer
+          format: int64
+        peak_hour:
+          type: integer
+        quiet_hour:
+          type: integer
+      required:
+      - peak_hour
+      - quiet_hour
+      - median_per_hour
+      - p95_per_hour
+      - cadence
+    UniqueIPsBlock:
+      type: object
+      properties:
+        sparkline_24h:
+          type: array
+          items:
+            type: integer
+            format: int64
+        value_24h:
+          type: integer
+          format: int64
+        value_30d:
+          type: integer
+          format: int64
+      required:
+      - value_24h
+      - value_30d
+      - sparkline_24h
+    PortEntry:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int64
+        port:
+          type: integer
+      required:
+      - port
+      - count
+    RecentEvent:
+      type: object
+      properties:
+        country_code:
+          type: string
+        port:
+          type: integer
+        source_ip_masked:
+          type: string
+        target_subdomain:
+          type: string
+        timestamp:
+          type: integer
+          format: int64
+      required:
+      - timestamp
+      - source_ip_masked
+      - target_subdomain
+      - port
+      - country_code
+    IpBatchResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/IpProvidersResponse'
+      required:
+      - results
+    ASNEntry:
+      type: object
+      properties:
+        asn:
+          type: integer
+        events:
+          type: integer
+          format: int64
+      required:
+      - asn
+      - events
+    DeviceInfo:
+      type: object
+      properties:
+        last_seen:
+          type: integer
+          format: int64
+        os:
+          type: string
+        version:
+          type: string
+      required:
+      - os
+      - version
+      - last_seen
+    ProviderEntry:
+      type: object
+      properties:
+        last_seen:
+          type: integer
+          format: int64
+        provider:
+          type: string
+        type:
+          type: string
+      required:
+      - provider
+      - type
+      - last_seen
+    IpBatchRequest:
+      type: object
+      properties:
+        ips:
+          type: array
+          items:
+            type: string
+      required:
+      - ips
+    ValidationProblemDetails:
+      type: object
+      properties:
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        instance:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - title
+      - status
+      - errors
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+      description: Private API key passed in the X-Api-Key header.

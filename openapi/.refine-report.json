@@ -1,0 +1,25 @@
+{
+  "provider": "synthient",
+  "sources": [
+    "synthient-openapi.json"
+  ],
+  "outputs": [
+    "synthient-account-api-openapi.yml",
+    "synthient-anonymizers-api-openapi.yml",
+    "synthient-helios-api-openapi.yml",
+    "synthient-ja4t-api-openapi.yml",
+    "synthient-lookup-api-openapi.yml",
+    "synthient-proxies-api-openapi.yml",
+    "synthient-torrents-api-openapi.yml"
+  ],
+  "archived": [
+    "archived openapi/synthient-openapi.json"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "synthient-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: written (+7 apis, 7 total)"
+  ],
+  "skipped": []
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/synthient/main/json-schema/synthient-honeypot-httpsstream-entry-schema.json",
+  "title": "HoneypotHTTPSStreamEntry",
+  "x-generated": "2026-09-28",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/synthient-openapi.json#/components/schemas/HoneypotHTTPSStreamEntry",
+  "type": "object",
+  "properties": {
+    "details": {
+      "type": "string",
+      "description": "TLS ClientHello details as a JSON-encoded string (cipher suites, extensions, supported curves, ALPN)"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "meta": {
+      "$ref": "#/$defs/HoneypotMeta"
+    },
+    "port": {
+      "type": "integer"
+    },
+    "raw": {
+      "type": "string",
+      "format": "byte",
+      "description": "Base64-encoded raw ClientHello bytes; omitted when not captured."
+    },
+    "timestamp": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Unix timestamp (seconds since epoch, UTC)"
+    },
+    "tunnel_id": {
+      "type": "integer",
+      "format": "int64"
+    }
+  },
+  "$defs": {
+    "HoneypotMeta": {
+      "type": "object",
+      "properties": {
+        "pool_id": {
+          "type": "string",
+          "description": "Pool identifier"
+        },
+        "provider": {
+          "type": "string",
+          "description": "Provider name"
+        },
+        "proxy_ip": {
+          "type": "string",
+          "description": "Source proxy IP address"
+        },
+        "server": {
+          "type": "string",
+          "description": "Honeypot server identifier"
+        }
+      }
+    }
+  }
+}

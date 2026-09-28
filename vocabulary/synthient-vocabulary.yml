@@ -1,0 +1,260 @@
+generated: '2026-09-28'
+method: derived
+generator: derive-vocabulary.py
+source: openapi/synthient-openapi.json
+vocabulary:
+  name: Synthient API Domain Vocabulary
+  description: 'Terms declared by Synthient API''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-09-28'
+  terms:
+  - term: Account
+    definition: Account info, quota, and the public health probe.
+    tags:
+    - Resource Group
+    source: openapi/synthient-openapi.json
+  - term: Lookup
+    definition: Single-IP, batch-IP, and domain enrichment endpoints.
+    tags:
+    - Resource Group
+    source: openapi/synthient-openapi.json
+  - term: Proxies
+    definition: Residential, datacenter, mobile, Tor, and VPN proxy IPs. One real-time stream and one parquet export.
+    tags:
+    - Resource Group
+    source: openapi/synthient-openapi.json
+  - term: Anonymizers
+    definition: VPN, Tor, and relay-class anonymizer IP ranges. One real-time stream and one parquet export.
+    tags:
+    - Resource Group
+    source: openapi/synthient-openapi.json
+  - term: Torrents
+    definition: DHT and tracker peer observations. One real-time stream and one parquet export.
+    tags:
+    - Resource Group
+    source: openapi/synthient-openapi.json
+  - term: Helios
+    definition: Honeypot capture streams. Helios sensors record HTTP requests, TLS ClientHellos, and ADB shell commands from inbound traffic to
+      our honeypot tunnels. Each protocol has its own real-time stream and parquet export.
+    tags:
+    - Resource Group
+    source: openapi/synthient-openapi.json
+  - term: JA4T
+    definition: JA4T TCP-layer fingerprint sightings attributed to source IPs with provider, country, and ASN enrichment. One real-time stream
+      and one parquet export.
+    tags:
+    - Resource Group
+    source: openapi/synthient-openapi.json
+  - term: ASNEntry
+    definition: 'Object declared by the contract with fields: asn, events.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/ASNEntry
+  - term: AccountAPIKey
+    definition: 'Object declared by the contract with fields: created_at, id, name.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/AccountAPIKey
+  - term: AccountInfoResponse
+    definition: 'Object declared by the contract with fields: api_key, email, first_name, last_name, lookup_quota, organization, scopes.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/AccountInfoResponse
+  - term: ActivityStatsBlock
+    definition: 'Object declared by the contract with fields: cadence, median_per_hour, p95_per_hour, peak_hour, quiet_hour.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/ActivityStatsBlock
+  - term: AnonymizerStreamEntry
+    definition: A single anonymizer event from the real-time anonymizer stream. Contains IP ranges rather than individual addresses.
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/AnonymizerStreamEntry
+  - term: CountryEntry
+    definition: 'Object declared by the contract with fields: country_code, events, unique_ips.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/CountryEntry
+  - term: DeviceInfo
+    definition: 'Object declared by the contract with fields: last_seen, os, version.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/DeviceInfo
+  - term: DomainLookupResponse
+    definition: 'Object declared by the contract with fields: activity_stats, domain, geo_distribution, hour_dow_heatmap, recent_events, stats,
+      status, time_series, top_asn, top_ports, top_subdomains, unique_ips.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/DomainLookupResponse
+  - term: ExportListItem
+    definition: 'Object declared by the contract with fields: checksum, created_at, date, download_path, hour, id, kind, row_count, size_bytes.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/ExportListItem
+  - term: ExportListResponse
+    definition: 'Object declared by the contract with fields: feeds, next_cursor, stream.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/ExportListResponse
+  - term: ExportMetaResponse
+    definition: 'Object declared by the contract with fields: checksum, created_at, date, format, hour, id, kind, rows, schema, size, stream.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/ExportMetaResponse
+  - term: HoneypotADBStreamEntry
+    definition: 'Object declared by the contract with fields: command, hash, sequential_id, session.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/HoneypotADBStreamEntry
+  - term: HoneypotDNSStreamEntry
+    definition: 'Object declared by the contract with fields: domain, meta, port, timestamp, tunnel_id.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/HoneypotDNSStreamEntry
+  - term: HoneypotHTTPSStreamEntry
+    definition: 'Object declared by the contract with fields: details, domain, meta, port, raw, timestamp, tunnel_id.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/HoneypotHTTPSStreamEntry
+  - term: HoneypotHTTPStreamEntry
+    definition: 'Object declared by the contract with fields: details, domain, meta, port, raw, timestamp, tunnel_id.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/HoneypotHTTPStreamEntry
+  - term: HoneypotMeta
+    definition: 'Object declared by the contract with fields: pool_id, provider, proxy_ip, server.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/HoneypotMeta
+  - term: IntelligenceInfo
+    definition: 'Object declared by the contract with fields: behavior, categories, devices, providers, risk_score.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/IntelligenceInfo
+  - term: IpBatchRequest
+    definition: 'Object declared by the contract with fields: ips.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/IpBatchRequest
+  - term: IpBatchResponse
+    definition: 'Object declared by the contract with fields: results.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/IpBatchResponse
+  - term: IpProvidersResponse
+    definition: 'Object declared by the contract with fields: intelligence, ip, location, network.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/IpProvidersResponse
+  - term: JA3StreamEntry
+    definition: 'Object declared by the contract with fields: address, host, id, ja3n, ja4, ja4h, protocol, secure, timestamp, user_agent.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/JA3StreamEntry
+  - term: JA4StreamEntry
+    definition: 'Object declared by the contract with fields: address, ch_server_name, event_id, ja4, ja4_r, ja4h, ja4h_r, ja4l, ja4t, timestamp,
+      url_path.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/JA4StreamEntry
+  - term: JA4TStreamEntry
+    definition: 'Object declared by the contract with fields: asn, country_code, ip, ja4t, provider, timestamp, type.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/JA4TStreamEntry
+  - term: LocationInfo
+    definition: 'Object declared by the contract with fields: city, country, geo_hash, latitude, longitude, state, timezone.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/LocationInfo
+  - term: LookupQuota
+    definition: 'Object declared by the contract with fields: credits, resets_in.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/LookupQuota
+  - term: NetworkInfo
+    definition: 'Object declared by the contract with fields: abuse_email, abuse_phone, asn, domain, isp, org, type.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/NetworkInfo
+  - term: Organization
+    definition: 'Object declared by the contract with fields: id, name, relation.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/Organization
+  - term: PortEntry
+    definition: 'Object declared by the contract with fields: count, port.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/PortEntry
+  - term: ProblemDetails
+    definition: 'Object declared by the contract with fields: detail, instance, status, title, type.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/ProblemDetails
+  - term: ProjectedColumn
+    definition: 'Object declared by the contract with fields: name, type.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/ProjectedColumn
+  - term: ProviderEntry
+    definition: 'Object declared by the contract with fields: last_seen, provider, type.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/ProviderEntry
+  - term: ProxyStreamEntry
+    definition: A single proxy event from the real-time proxy stream.
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/ProxyStreamEntry
+  - term: RecentEvent
+    definition: 'Object declared by the contract with fields: country_code, port, source_ip_masked, target_subdomain, timestamp.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/RecentEvent
+  - term: Schema
+    definition: 'Object declared by the contract with fields: fields.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/Schema
+  - term: Stats
+    definition: 'Object declared by the contract with fields: events_24h, total_events_30d.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/Stats
+  - term: SubdomainEntry
+    definition: 'Object declared by the contract with fields: count, subdomain.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/SubdomainEntry
+  - term: TimeSeriesEntry
+    definition: 'Object declared by the contract with fields: date, events, unique_ips.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/TimeSeriesEntry
+  - term: TorrentFileEntry
+    definition: 'Object declared by the contract with fields: length, path.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/TorrentFileEntry
+  - term: TorrentPeerEntry
+    definition: 'Object declared by the contract with fields: encrypted, ip, port, source.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/TorrentPeerEntry
+  - term: TorrentStreamEntry
+    definition: 'Object declared by the contract with fields: file_count, files, info_hash, magnet_uri, name, peers, piece_length, timestamp,
+      total_size.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/TorrentStreamEntry
+  - term: UniqueIPsBlock
+    definition: 'Object declared by the contract with fields: sparkline_24h, value_24h, value_30d.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/UniqueIPsBlock
+  - term: ValidationProblemDetails
+    definition: 'Object declared by the contract with fields: errors, instance, status, title, type.'
+    tags:
+    - Object
+    source: openapi/synthient-openapi.json#/components/schemas/ValidationProblemDetails

@@ -1,0 +1,140 @@
+# Synthient
+
+> Synthient detects anonymized network traffic. It identifies residential proxies, VPNs, Tor nodes, private relays, and the proxy botnets behind them, and exposes that intelligence as a synchronous HTTP and gRPC API, bulk Parquet exports, and real-time NDJSON streams.
+
+This file is written for language models and coding agents, not for humans. It gives you the whole product in one page: the rules to follow when you integrate, a cheat sheet you can act on without another fetch, and a map of the human documentation.
+
+- Complete machine reference, every endpoint and field: https://docs.synthient.com/llms-full.txt
+- Human documentation: https://docs.synthient.com
+
+Base URL `https://api.synthient.com`, all HTTP endpoints under `/api/v4`. gRPC mirror at `grpc.synthient.com:443`, service `synthient.v1.SynthientService`, schema over reflection. Authentication is a single API key in the `x-api-key` header. There is no OAuth, no bearer token, and no browser-side usage.
+
+## Documentation sections
+
+- [AI](https://docs.synthient.com/ai): Bring Synthient into your AI workflow. Connect an agent with a plugin, or use the MCP server with your preferred client.
+- [Guides](https://docs.synthient.com/guides): Turn IP intelligence into decisions with practical guides for your application.
+- [Migrating](https://docs.synthient.com/migration): Move your existing IP intelligence integration to Synthient with field mappings and migration guides.
+- [API Documentation](https://docs.synthient.com/api): Build with the Synthient API. Explore endpoints, authentication, response formats, and usage limits.
+- [Enterprise](https://docs.synthient.com/enterprise): Work with Synthient data at scale through bulk snapshots, live streams, and honeypot intelligence.
+- [Miscellaneous](https://docs.synthient.com/misc): Find help with your Synthient account and integration.
+
+## Instructions for Large Language Model Agents
+
+Follow these when writing Synthient code on someone's behalf.
+
+**Authenticate with `x-api-key`.** An HTTP request header, or gRPC request metadata under the same name. Never `Authorization: Bearer`, never a query parameter. Read the key from `SYNTHIENT_API_KEY` or a secret manager, never a literal in source. Keys are UUIDs; the one that appears in the docs is an illustration, not a working key.
+
+**Never call Synthient from a browser.** Every surface is server to server. If the user needs client-side enrichment, put the call behind their own backend.
+
+**Batch.** For more than one address, use `POST /api/v4/lookup/ips` (up to 1,000 IPs) instead of a loop over `GET /api/v4/lookup/ip/{ip}`. Batches cost `ceil(n * 0.9)` credits, so a batch is always cheaper, and duplicates and invalid entries are dropped before billing.
+
+**Read timestamp units per surface.** IP and domain lookups, feed metadata, and the `proxies`, `anonymizers`, and `torrents` streams use Unix **seconds**. The four Helios honeypot streams (`helio/http`, `helio/https`, `helio/dns`, `helio/adb`) use Unix **milliseconds**. On gRPC every one of these is a `google.protobuf.Timestamp`. Do not apply one conversion to all of them.
+
+**Treat `intelligence.risk_score` as a summary, not a verdict.** It is a 0-100 number that collapses independent signals. For anything past a coarse filter, decide on the underlying fields: `intelligence.categories`, `intelligence.behavior`, `intelligence.providers`, and `network.type`.
+
+**Do not generate closed enums from documentation.** `behavior`, `categories`, and the provider list all grow. Parse them as arrays of strings, keep values you do not recognize rather than dropping them, and never write an exhaustive `switch` that assumes the documented set is complete.
+
+**Distinguish the failures.** `401` means the key is missing or invalid. `402` means lookup credits are exhausted. `403` means the key is valid but lacks the scope for that endpoint. Only `402` is solved by buying credits; `403` needs a scope grant. Check both with `GET /api/v4/account/me`.
+
+**Back off on `429`, `500`, and `503`.** Exponential backoff with jitter, honoring `Retry-After` when present. Pace normal traffic from the `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset` response headers instead of discovering the ceiling by collecting `429`s.
+
+**Expect streams to close.** Feed streams are NDJSON over a long-lived response, and the server closes healthy connections about every 30 minutes. Reconnect immediately: that close is routine, not an error. Only apply backoff when the reconnect itself fails.
+
+**Prefer the shipped clients.** Go: `github.com/synthient/go-synthient/v2`. Shell and agents: `brew install synthient/tap/synthient`. Python, Node, Java, and Ruby SDKs are in development, so for those languages write plain HTTP against the endpoints below rather than importing an SDK that does not exist yet.
+
+**Do not invent fields.** If a field is not in this file or in llms-full.txt, it is not in the API. Fetch https://docs.synthient.com/llms-full.txt before guessing at a response shape.
+
+## API cheat sheet
+
+Enough to write a correct integration without another fetch. Full request and response schemas are in llms-full.txt.
+
+| Endpoint | Purpose | Cost | Scope |
+| - | - | - | - |
+| `GET /api/v4/lookup/ip/{ip}` | Enrich one IPv4 or IPv6 address | 1 credit | `BASIC` |
+| `POST /api/v4/lookup/ips` | Enrich up to 1,000 addresses | `ceil(n * 0.9)` credits | `BASIC` |
+| `GET /api/v4/lookup/domain/{domain}` | Honeypot intelligence for a domain | 1 credit | `BASIC` |
+| `GET /api/v4/account/me` | Scopes, organization, remaining quota | free | `BASIC` |
+| `GET /api/v4/feeds/{stream}/export` | List Parquet snapshots, newest first | free | `*_FEED` |
+| `GET /api/v4/feeds/{stream}/export/{id}` | 307 to a 24h presigned Parquet URL | free | `*_FEED` |
+| `GET /api/v4/feeds/{stream}/export/{id}/meta` | Checksum, row count, Parquet schema | free | `*_FEED` |
+| `GET /api/v4/feeds/{stream}/stream` | Live NDJSON events | free | `*_STREAM`, or `PROXY_FIREHOSE` for proxies |
+
+`{id}` is `latest` for the most recent hourly snapshot, `YYYY-MM-DD` for a daily rollup, or `YYYY-MM-DD/HH` for a specific hour in the current UTC day.
+
+Streams and exports share seven identifiers: `proxies`, `anonymizers`, `torrents`, `honeypot_http`, `honeypot_https`, `honeypot_dns`, `honeypot_adb`. The four honeypot feeds are addressed in URLs under a `helio/` prefix (`/api/v4/feeds/helio/http/stream`, `/api/v4/feeds/helio/http/export/{id}`) while the snapshot listing endpoint and the scope names use the `honeypot_*` spelling.
+
+A single lookup returns three objects: `network` (asn, isp, type, org, domain, abuse contacts), `location` (country, state, city, timezone, lat, lon, geo_hash), and `intelligence` (risk_score, behavior, categories, devices, providers).
+
+```bash
+curl -G https://api.synthient.com/api/v4/lookup/ip/101.53.218.152 \
+  -H "x-api-key: $SYNTHIENT_API_KEY"
+```
+
+```json
+{
+  "ip": "101.53.218.152",
+  "network": { "asn": 55850, "isp": "TrustPower Ltd", "type": "RESIDENTIAL", "org": null, "domain": null, "abuse_email": null, "abuse_phone": null },
+  "location": { "country": "NZ", "state": "CAN", "city": "New Brighton", "timezone": "Pacific/Auckland", "latitude": -43.532, "longitude": 172.341, "geo_hash": "rb6" },
+  "intelligence": {
+    "risk_score": 96,
+    "behavior": ["PROGRAMMATIC_TRAFFIC"],
+    "categories": ["RESIDENTIAL_PROXY"],
+    "devices": [],
+    "providers": [{ "provider": "LUNAPROXY", "type": "RESIDENTIAL_PROXY", "last_seen": 1776729600 }]
+  }
+}
+```
+
+`intelligence.categories` and `intelligence.providers[].type` are drawn from: `FREE_VPN`, `COMMERCIAL_VPN`, `ENTERPRISE_VPN`, `MOBILE_PROXY`, `BLOCKCHAIN_PROXY`, `RESIDENTIAL_PROXY`, `PUBLIC_PROXY`, `DATACENTER_PROXY`, `TOR_NODE`, `PRIVATE_RELAY`, `BOTNET`, `SEARCH_ENGINE`, `AI_CRAWLER`, `SOCIAL_MEDIA`, `UPTIME_MONITOR`, `LINK_PREVIEW`, `SEO_CRAWLER`, `WEB_ARCHIVER`, `WEBHOOK_PROVIDER`, `PAYMENT_PROCESSOR`. This set grows.
+
+`network.type` is one of `MOBILE`, `SATELLITE`, `IN_FLIGHT_WIFI`, `RESIDENTIAL`, `CORPORATE`, `ACADEMIC`, `DATACENTER`, `GOVERNMENT`.
+
+`intelligence.behavior` covers a 90 day window and currently includes `PROGRAMMATIC_TRAFFIC`, `ACTIVE_CRAWLER`, `TORRENTING`, `TOR_USER`, `CREDENTIAL_STUFFING`, `COMPROMISED_DEVICE`, `MALICIOUS_TRAFFIC`. Treat it as an open list of strings.
+
+Errors return `{"detail": "..."}`, or `{"title": "Validation error", "errors": {"field": ["message"]}}` for validation failures. Statuses: `400` fix the request, `401` bad key, `402` out of credits, `403` missing scope, `404` genuinely absent, `429` slow down, `500` and `503` retry with backoff.
+
+Sustained rate limits are per team, not per key: 100 req/sec on lookups, 10 req/sec on `/account/me`, 2 req/sec on export listings, 0.1 req/sec on snapshot downloads, and 0.5 req/sec on stream connection establishment.
+
+## Docs
+
+- [Introduction](https://docs.synthient.com/): What Synthient detects and how the surfaces relate.
+- [Methodology](https://docs.synthient.com/methodology): How the data is sourced, including the proxy reseller ecosystem and the IPv6 coverage strategy.
+- [Service Tags](https://docs.synthient.com/service-tags): Searchable list of every public provider tag. Some tags are TLP:AMBER+STRICT and never appear publicly, so the list is a floor, not a ceiling.
+
+## API
+
+- [IP API](https://docs.synthient.com/ipapi): Single, batch, and domain lookups with the full response schema and every enum.
+- [Authentication](https://docs.synthient.com/authentication): Key handling and the scope model.
+- [Errors](https://docs.synthient.com/errors): Status code reference with a worked example per status.
+- [Rate Limits](https://docs.synthient.com/rate-limits): Credit accounting, per-endpoint ceilings, and the backoff recipe.
+- [Account](https://docs.synthient.com/account): Organization, scopes, and remaining quota.
+- [gRPC](https://docs.synthient.com/grpc): Reflection workflow, HTTP to RPC method map, and gRPC status mapping.
+
+## SDKs and tools
+
+- [Go SDK](https://docs.synthient.com/sdk): `github.com/synthient/go-synthient/v2`, streams as `iter.Seq2`, Go 1.25 or later.
+- [CLI](https://docs.synthient.com/cli): The `synthient` binary, including `synthient mcp`, a Model Context Protocol server that exposes lookups, feed metadata, sampled streams, and gRPC schemas as agent tools.
+- [MCP server](https://docs.synthient.com/ai/mcp): The tools `synthient mcp` exposes and how to register the server with a client.
+- [Claude Code plugin](https://docs.synthient.com/ai/claude): Marketplace install and the six `/synthient:*` skills that bundle with the MCP server.
+- [Codex plugin](https://docs.synthient.com/ai/codex): Marketplace install and the same six skills, named `$synthient-*`.
+
+## Guides
+
+- [Risk Scoring](https://docs.synthient.com/guides/risk): What goes into the score, why a single number is not enough, and how to build your own engine on the raw signals.
+
+## Migration
+
+- [Migrating from Spur](https://docs.synthient.com/migration/spur): Field-by-field mapping from the Spur context API.
+- [Migrating from IPQualityScore](https://docs.synthient.com/migration/ipqs): Field-by-field mapping from the IPQS proxy detection API.
+
+## Enterprise data
+
+- [Feeds](https://docs.synthient.com/enterprise/feeds): Hourly and daily Parquet snapshots, presigned downloads, checksums, and schemas.
+- [Firehose](https://docs.synthient.com/enterprise/firehose): Live proxy, anonymizer, and torrent event streams with consumer examples.
+- [Helios](https://docs.synthient.com/enterprise/helios): The honeypot platform. HTTP, TLS ClientHello, DNS, and Android Debug Bridge captures.
+
+## Optional
+
+- [Full machine reference](https://docs.synthient.com/llms-full.txt): Every endpoint, field, enum, and error in one file.
+- [Support](https://docs.synthient.com/misc/support): contact@synthient.com.
+- [Synthient](https://synthient.com): Product site and dashboard.

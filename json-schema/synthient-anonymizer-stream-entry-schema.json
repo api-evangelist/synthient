@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/synthient/main/json-schema/synthient-anonymizer-stream-entry-schema.json",
+  "title": "AnonymizerStreamEntry",
+  "description": "A single anonymizer event from the real-time anonymizer stream. Contains IP ranges rather than individual addresses.",
+  "x-generated": "2026-09-28",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/synthient-openapi.json#/components/schemas/AnonymizerStreamEntry",
+  "type": "object",
+  "properties": {
+    "asn": {
+      "type": "integer",
+      "format": "int32",
+      "description": "Autonomous System Number of range_start"
+    },
+    "country_code": {
+      "type": "string",
+      "description": "ISO 3166-1 alpha-2 country code of range_start"
+    },
+    "provider": {
+      "type": "string",
+      "description": "Provider name"
+    },
+    "range_end": {
+      "type": "string",
+      "description": "End of the anonymizer IP range"
+    },
+    "range_start": {
+      "type": "string",
+      "description": "Start of the anonymizer IP range"
+    },
+    "timestamp": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Unix timestamp (seconds since epoch, UTC)"
+    },
+    "type": {
+      "type": "string",
+      "description": "Proxy/anonymizer type"
+    }
+  }
+}

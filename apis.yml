@@ -1,29 +1,268 @@
 aid: synthient
 name: Synthient API
-description: 'Synthient API is a company surfaced via the API Evangelist harvest backlog (source: new-submission)
-  and added to the network as a stub for full-pipeline profiling.'
+image: https://synthient.com/og-image.png?v=20260624
+description: Synthient provides IP enrichment, account management, and real-time data feeds for cybersecurity and fraud prevention. The platform
+  offers residential proxies, VPNs, and anonymized IP data with streaming capabilities, usage limits, and comprehensive authentication via API
+  keys.
 url: https://raw.githubusercontent.com/api-evangelist/synthient/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:new-submission
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment pass 2026-09-28 (modular-v1; was harvest)
 specificationVersion: '0.20'
 created: '2026-09-28'
 modified: '2026-09-28'
 tags:
 - Company
-apis: []
+- IP
+- Enrichment
+- Cybersecurity
+- Data
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/synthient-agentic-access.yml
+- type: RateLimits
+  url: rate-limits/synthient-rate-limits.yml
+- type: Plans
+  url: plans/synthient-plans-pricing.yml
+- type: Spectral
+  url: rules/synthient-rules.yml
+- type: JSONLD
+  url: json-ld/synthient-context.jsonld
+- type: Vocabulary
+  url: vocabulary/synthient-vocabulary.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: DataModel
+  url: data-model/synthient-data-model.yml
+- type: CLI
+  url: cli/synthient-cli.yml
+- type: Security
+  url: https://synthient.com/terms
+- type: Authentication
+  url: authentication/synthient-authentication.yml
+- type: ErrorCatalog
+  url: errors/synthient-problem-types.yml
+- type: Conformance
+  url: conformance/synthient-conformance.yml
+- type: LLMsTxt
+  url: llms/synthient-llms.txt
+- type: ToolCrosswalk
+  url: mcp/synthient-tool-crosswalk.yml
+- type: MCPServer
+  url: mcp/synthient-mcp.yml
+- type: SecurityTxt
+  url: well-known/synthient-security.txt
+- type: WellKnown
+  url: well-known/synthient-well-known.yml
+- type: Hosts
+  url: hosts/synthient-hosts.yml
+- type: Vendors
+  url: vendors/synthient-vendors.yml
+- type: TermsOfService
+  url: https://synthient.com/terms
+- type: StatusPage
+  url: https://synthient.com/status
+- type: PrivacyPolicy
+  url: https://synthient.com/privacy
+- type: Pricing
+  url: https://synthient.com/pricing
+- type: Blog
+  url: https://synthient.com/blog
+- type: VulnerabilityDisclosure
+  url: security/synthient-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/synthient-domain-security.yml
 - type: Website
   url: https://synthient.com/
 - type: Documentation
   url: https://docs.synthient.com/api
-x-submission-notes: Public OpenAPI 3.0 at https://api.synthient.com/openapi.json. Root returns 403 to
-  plain fetchers (bot protection); docs and openapi 200.
+- type: DeveloperPortal
+  url: https://docs.synthient.com/api
+- type: APIReference
+  url: https://docs.synthient.com/api
+- type: GettingStarted
+  url: https://docs.synthient.com/sdk
+- type: SDK
+  url: https://docs.synthient.com/sdk
+- type: GitHubOrganization
+  url: https://github.com/synthient
+- type: SocialX
+  url: https://x.com/synthient
+apis:
+- aid: synthient:synthient-account-api
+  name: Synthient API Account API
+  description: Account info, quota, and the public health probe.
+  humanURL: https://docs.synthient.com/api
+  baseURL: https://api.synthient.com/api/v4
+  tags:
+  - Account
+  properties:
+  - type: OpenAPI
+    url: openapi/synthient-account-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/synthient-domain-lookup-response-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-anonymizer-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-torrent-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-ja4-tstream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-proxy-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-honeypot-httpsstream-entry-schema.json
+- aid: synthient:synthient-anonymizers-api
+  name: Synthient API Anonymizers API
+  description: >-
+    VPN, Tor, and relay-class anonymizer IP ranges. One real-time stream and one parquet export.
+  humanURL: https://docs.synthient.com/api
+  baseURL: https://api.synthient.com/api/v4
+  tags:
+  - Anonymizers
+  properties:
+  - type: OpenAPI
+    url: openapi/synthient-anonymizers-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/synthient-domain-lookup-response-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-anonymizer-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-torrent-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-ja4-tstream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-proxy-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-honeypot-httpsstream-entry-schema.json
+- aid: synthient:synthient-helios-api
+  name: Synthient API Helios API
+  description: >-
+    Honeypot capture streams. Helios sensors record HTTP requests, TLS ClientHellos, and ADB shell commands
+    from inbound traffic to our honeypot tunnels. Each protocol has its own real-time stream and parquet
+    export.
+  humanURL: https://docs.synthient.com/api
+  baseURL: https://api.synthient.com/api/v4
+  tags:
+  - Helios
+  properties:
+  - type: OpenAPI
+    url: openapi/synthient-helios-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/synthient-domain-lookup-response-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-anonymizer-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-torrent-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-ja4-tstream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-proxy-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-honeypot-httpsstream-entry-schema.json
+- aid: synthient:synthient-ja4t-api
+  name: Synthient API JA4T API
+  description: >-
+    JA4T TCP-layer fingerprint sightings attributed to source IPs with provider, country, and ASN enrichment.
+    One real-time stream and one parquet export.
+  humanURL: https://docs.synthient.com/api
+  baseURL: https://api.synthient.com/api/v4
+  tags:
+  - JA4T
+  properties:
+  - type: OpenAPI
+    url: openapi/synthient-ja4t-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/synthient-domain-lookup-response-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-anonymizer-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-torrent-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-ja4-tstream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-proxy-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-honeypot-httpsstream-entry-schema.json
+- aid: synthient:synthient-lookup-api
+  name: Synthient API Lookup API
+  description: Single-IP, batch-IP, and domain enrichment endpoints.
+  humanURL: https://docs.synthient.com/api
+  baseURL: https://api.synthient.com/api/v4
+  tags:
+  - Lookup
+  properties:
+  - type: OpenAPI
+    url: openapi/synthient-lookup-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/synthient-domain-lookup-response-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-anonymizer-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-torrent-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-ja4-tstream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-proxy-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-honeypot-httpsstream-entry-schema.json
+- aid: synthient:synthient-proxies-api
+  name: Synthient API Proxies API
+  description: >-
+    Residential, datacenter, mobile, Tor, and VPN proxy IPs. One real-time stream and one parquet export.
+  humanURL: https://docs.synthient.com/api
+  baseURL: https://api.synthient.com/api/v4
+  tags:
+  - Proxies
+  properties:
+  - type: OpenAPI
+    url: openapi/synthient-proxies-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/synthient-domain-lookup-response-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-anonymizer-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-torrent-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-ja4-tstream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-proxy-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-honeypot-httpsstream-entry-schema.json
+- aid: synthient:synthient-torrents-api
+  name: Synthient API Torrents API
+  description: DHT and tracker peer observations. One real-time stream and one parquet export.
+  humanURL: https://docs.synthient.com/api
+  baseURL: https://api.synthient.com/api/v4
+  tags:
+  - Torrents
+  properties:
+  - type: OpenAPI
+    url: openapi/synthient-torrents-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/synthient-domain-lookup-response-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-anonymizer-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-torrent-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-ja4-tstream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-proxy-stream-entry-schema.json
+  - type: JSONSchema
+    url: json-schema/synthient-honeypot-httpsstream-entry-schema.json
+x-submission-notes: Public OpenAPI 3.0 at https://api.synthient.com/openapi.json. Root returns 403 to plain fetchers (bot protection); docs and
+  openapi 200.
 x-submission-probe: '2026-09-28: root 403 + invented 403 (bot-blocking), llms 200, openapi 200, docs 200'
 x-submitted-by: benjamin@synthient.com (apis.io/add, 2026-09-28)
+x-enrichment:
+  date: '2026-09-28'
+  status: enriched
+  artifacts_added: 25
+  pass: modular-v1
+  engine: identity=local,contract=local,surfaces=local,docs=local,regulatory=local

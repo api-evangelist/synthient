@@ -1,0 +1,19 @@
+generated: '2026-09-28'
+method: searched
+generator: extract-docs-artifacts.py (local)
+source: https://synthient.com/pricing
+sources:
+- https://synthient.com/pricing
+name: Synthient API pricing
+audience: business-product
+pricing_basis: negotiated
+plans:
+- name: Researcher
+  price_text: Custom quote
+- name: Startup
+  price_text: Custom quote
+- name: Business
+  price_text: Custom quote
+- name: Enterprise
+  price_text: Custom quote
+docs: https://synthient.com/pricing

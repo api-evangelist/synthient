@@ -1,0 +1,12 @@
+generated: '2026-09-28'
+method: generated
+generator: extract-docs-artifacts.py skills (local)
+source: openapi/synthient-openapi.json
+skills:
+- file: skills/synthient-lookup-intelligence.md
+  name: synthient-lookup-intelligence
+  api: openapi/synthient-openapi.json
+  operations:
+  - domainLookup
+  - ipLookup
+  - lookupIpBatch

@@ -1,0 +1,18 @@
+generated: '2026-09-28'
+method: searched
+generator: extract-docs-artifacts.py (local)
+source: https://docs.synthient.com/authentication
+sources:
+- https://docs.synthient.com/authentication
+description: Authentication schemes for Synthient API
+schemes:
+- type: apiKey
+  name: API Key
+  evidence: Every request to Synthient is authenticated with a single API key, which carries a set of scopes that determine which endpoints and
+    feeds you can access.
+  location: header
+  header: x-api-key
+  how_to_obtain: API keys are issued from the Synthient dashboard. If you don't have one yet, contact us and we'll provision one with the scopes
+    you need.
+note: No OAuth2 or other authentication schemes are documented on the page.
+docs: https://docs.synthient.com/authentication

@@ -1,0 +1,85 @@
+generated: '2026-09-28'
+method: searched
+generator: extract-docs-artifacts.py (local)
+source: https://docs.synthient.com/rate-limits
+sources:
+- https://docs.synthient.com/rate-limits
+name: Synthient API rate limits
+limits:
+- name: GET /lookup/ip/{ip} sustained
+  limit_text: 100 req/sec
+  max: 100
+  window: second
+  endpoint: GET /lookup/ip/{ip}
+- name: GET /lookup/ip/{ip} burst
+  limit_text: '200'
+  max: 200
+  endpoint: GET /lookup/ip/{ip}
+  burst: burst
+- name: POST /lookup/ips sustained
+  limit_text: 100 req/sec
+  max: 100
+  window: second
+  endpoint: POST /lookup/ips
+- name: POST /lookup/ips burst
+  limit_text: '200'
+  max: 200
+  endpoint: POST /lookup/ips
+  burst: burst
+- name: GET /lookup/domain/{domain} sustained
+  limit_text: 100 req/sec
+  max: 100
+  window: second
+  endpoint: GET /lookup/domain/{domain}
+- name: GET /lookup/domain/{domain} burst
+  limit_text: '200'
+  max: 200
+  endpoint: GET /lookup/domain/{domain}
+  burst: burst
+- name: GET /account/me sustained
+  limit_text: 10 req/sec
+  max: 10
+  window: second
+  endpoint: GET /account/me
+- name: GET /account/me burst
+  limit_text: '10'
+  max: 10
+  endpoint: GET /account/me
+  burst: burst
+- name: GET /feeds/{stream}/stream sustained
+  limit_text: 0.5 req/sec
+  max: 0.5
+  window: second
+  endpoint: GET /feeds/{stream}/stream (connection establishment)
+- name: GET /feeds/{stream}/stream burst
+  limit_text: '20'
+  max: 20
+  endpoint: GET /feeds/{stream}/stream (connection establishment)
+  burst: burst
+- name: GET /feeds/{stream}/export and …/meta sustained
+  limit_text: 2 req/sec
+  max: 2
+  window: second
+  endpoint: GET /feeds/{stream}/export and …/meta
+- name: GET /feeds/{stream}/export and …/meta burst
+  limit_text: '60'
+  max: 60
+  endpoint: GET /feeds/{stream}/export and …/meta
+  burst: burst
+- name: GET /feeds/{stream}/export/{snapshot_id} sustained
+  limit_text: 0.1 req/sec (≈360/hour)
+  max: 0.1
+  window: second
+  endpoint: GET /feeds/{stream}/export/{snapshot_id} (downloads)
+- name: GET /feeds/{stream}/export/{snapshot_id} burst
+  limit_text: '120'
+  max: 120
+  endpoint: GET /feeds/{stream}/export/{snapshot_id} (downloads)
+  burst: burst
+headers:
+- RateLimit-Limit
+- RateLimit-Remaining
+- RateLimit-Reset
+- Retry-After
+exhaustion_status: 429
+docs: https://docs.synthient.com/rate-limits

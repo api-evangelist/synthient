@@ -1,0 +1,530 @@
+openapi: 3.2.0
+info:
+  title: Synthient Anonymizers API
+  version: 1.0.0
+  description: Synthient API for IP enrichment, account management, and real-time data feeds.
+servers:
+- url: /api/v4
+  description: Versioned HTTP API base path
+tags:
+- name: Anonymizers
+  description: VPN, Tor, and relay-class anonymizer IP ranges. One real-time stream and one parquet export.
+paths:
+  /feeds/anonymizers/export:
+    get:
+      operationId: listAnonymizersExport
+      summary: List anonymizers parquet exports
+      description: 'List parquet export feeds for the **anonymizers** stream. Returns one page of daily and hourly snapshots, newest-first; pass `next_cursor` back as `cursor` for the next page.
+
+
+        **Required scope:** `ANONYMIZERS_FEED`. Parquet snapshots land at `{stream}/latest/HH_{stream}.parquet` hourly and are rolled up daily into `{stream}/YYYY/MM/DD/{stream}.parquet` (00:30 UTC).'
+      tags:
+      - Anonymizers
+      security:
+      - apiKeyAuth: []
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 500
+          default: 100
+        description: Page size. Defaults to 100; values above 500 are clamped.
+      - name: cursor
+        in: query
+        schema:
+          type: string
+        description: Opaque pagination token returned in `next_cursor` of the previous response. Omit on the first page.
+      responses:
+        '200':
+          description: Page of export feeds. Includes `next_cursor` when more pages exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportListResponse'
+        '400':
+          description: Bad cursor or invalid limit
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Unauthorized — missing or invalid API key
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Forbidden — API key lacks `ANONYMIZERS_FEED`
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /feeds/anonymizers/export/{date}:
+    get:
+      operationId: downloadAnonymizersExport
+      summary: Download a anonymizers parquet export
+      description: 'Download a single parquet snapshot for **anonymizers**. Returns a 307 redirect to a presigned R2 URL valid for 24 hours. 307 (not 301) because the URL is minted per request and expires — intermediaries must not cache it.
+
+
+        **Required scope:** `ANONYMIZERS_FEED`. **Columns:** `range_start`, `range_end`, `provider`, `type`, `country_code`, `asn`, `timestamp`'
+      tags:
+      - Anonymizers
+      security:
+      - apiKeyAuth: []
+      parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '2026-05-03'
+        description: Either a YYYY-MM-DD date for a daily rollup, or the literal string `latest` for the most recent hourly export.
+      responses:
+        '307':
+          description: Temporary redirect to a 24h presigned download URL on the CDN.
+        '400':
+          description: Bad date format (expected YYYY-MM-DD or 'latest')
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Unauthorized — missing or invalid API key
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Forbidden — API key lacks `ANONYMIZERS_FEED`
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: No export exists for the requested date. If the date's daily rollup is still being assembled (roughly 00:00–01:30 UTC for the largest streams), the response carries a Retry-After header and a problem detail saying so — the individual hours remain downloadable at /export/{date}/{hour} in the meantime.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /feeds/anonymizers/export/{date}/meta:
+    get:
+      operationId: getAnonymizersExportMeta
+      summary: Get anonymizers parquet metadata
+      description: 'Metadata for a single **anonymizers** parquet snapshot: SHA-256 checksum, byte size, row count, parquet schema (column names + types), and canonical date. No file body — call the matching `/export/{date}` endpoint to download.
+
+
+        **Required scope:** `ANONYMIZERS_FEED`.'
+      tags:
+      - Anonymizers
+      security:
+      - apiKeyAuth: []
+      parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '2026-05-03'
+        description: Either a YYYY-MM-DD date for a daily rollup, or the literal string `latest` for the most recent hourly export.
+      responses:
+        '200':
+          description: Export-feed metadata.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportMetaResponse'
+        '400':
+          description: Bad date format
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Unauthorized — missing or invalid API key
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Forbidden — API key lacks `ANONYMIZERS_FEED`
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: No export exists for the requested date. If the date's daily rollup is still being assembled (roughly 00:00–01:30 UTC for the largest streams), the response carries a Retry-After header and a problem detail saying so — the individual hours remain downloadable at /export/{date}/{hour} in the meantime.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /feeds/anonymizers/export/{date}/{hour}:
+    get:
+      operationId: downloadAnonymizersHourlyExport
+      summary: Download a anonymizers hourly parquet export
+      description: 'Download a specific hourly parquet snapshot for **anonymizers** by date and hour. Returns a 307 redirect to a presigned R2 URL valid for 24 hours.
+
+
+        Hourly files are transient — shortly after 00:30 UTC they are rolled up into the daily export and the per-hour artifacts are deleted. Hours remain downloadable until their day''s rollup completes (including yesterday''s hours in the window right after midnight UTC); once rolled up, requests return 400 with a note pointing at `/export/{date}` for the daily rollup. The `latest` alias rolls forward each hour and tracks the most recent hourly.
+
+
+        **Required scope:** `ANONYMIZERS_FEED`. **Columns:** `range_start`, `range_end`, `provider`, `type`, `country_code`, `asn`, `timestamp`'
+      tags:
+      - Anonymizers
+      security:
+      - apiKeyAuth: []
+      parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '2026-05-03'
+        description: Either a YYYY-MM-DD date for a daily rollup, or the literal string `latest` for the most recent hourly export.
+      - name: hour
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 14
+          minimum: 0
+          maximum: 23
+        description: Hour of day (UTC) — integer 0..23. Identifies the specific hourly snapshot for `{date}`.
+      responses:
+        '307':
+          description: Temporary redirect to a 24h presigned download URL on the CDN.
+        '400':
+          description: Bad date format, hour out of range (0..23), or the hour has already been rolled into the daily export (request /export/{date} instead)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Unauthorized — missing or invalid API key
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Forbidden — API key lacks `ANONYMIZERS_FEED`
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: No hourly export exists for the requested hour
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /feeds/anonymizers/export/{date}/{hour}/meta:
+    get:
+      operationId: getAnonymizersHourlyExportMeta
+      summary: Get anonymizers hourly parquet metadata
+      description: 'Metadata for one hourly **anonymizers** parquet snapshot identified by date and hour. Same shape as the daily `/meta` response.
+
+
+        Hourly metadata is available while the hour''s file exists — including yesterday''s hours until their daily rollup completes. Once rolled up, request the daily `/export/{date}/meta` instead.
+
+
+        **Required scope:** `ANONYMIZERS_FEED`.'
+      tags:
+      - Anonymizers
+      security:
+      - apiKeyAuth: []
+      parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '2026-05-03'
+        description: Either a YYYY-MM-DD date for a daily rollup, or the literal string `latest` for the most recent hourly export.
+      - name: hour
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 14
+          minimum: 0
+          maximum: 23
+        description: Hour of day (UTC) — integer 0..23. Identifies the specific hourly snapshot for `{date}`.
+      responses:
+        '200':
+          description: Export-feed metadata.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportMetaResponse'
+        '400':
+          description: Bad date format, hour out of range (0..23), or date is not the current UTC date
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Unauthorized — missing or invalid API key
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Forbidden — API key lacks `ANONYMIZERS_FEED`
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: No hourly export exists for the requested hour
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /feeds/anonymizers/stream:
+    get:
+      operationId: streamAnonymizers
+      summary: Stream anonymizer events in real time
+      description: 'Real-time NDJSON stream of VPN, Tor, and relay-class anonymizer observations. Each event is an IP range (start/end) rather than an individual address — VPN providers issue blocks, not single IPs.
+
+
+        **Required scope:** `ANONYMIZERS_STREAM`. **Schema:** see `AnonymizerStreamEntry` under Components.
+
+
+        **Sample event:**
+
+        ```
+
+        {"range_start":"198.51.100.0","range_end":"198.51.100.255","provider":"nordvpn","type":"commercial_vpn","timestamp":1714780800,"country_code":"NL","asn":60068}
+
+        ```'
+      tags:
+      - Anonymizers
+      security:
+      - apiKeyAuth: []
+      responses:
+        '200':
+          description: NDJSON stream of anonymizers events. Each line is a complete JSON object. The connection stays open for up to 30 minutes.
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/AnonymizerStreamEntry'
+        '401':
+          description: Unauthorized — missing or invalid API key
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Forbidden — API key lacks the required scope for this feed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '429':
+          description: Too many concurrent streams from this client
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '503':
+          description: Service unavailable — streaming backend is down
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+components:
+  schemas:
+    ExportListResponse:
+      type: object
+      properties:
+        feeds:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExportListItem'
+        next_cursor:
+          type: string
+        stream:
+          type: string
+      required:
+      - stream
+      - feeds
+    ProjectedColumn:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+      required:
+      - name
+      - type
+    ExportListItem:
+      type: object
+      properties:
+        checksum:
+          type: string
+        created_at:
+          type: integer
+          format: int64
+        date:
+          type: string
+        download_path:
+          type: string
+        hour:
+          type: integer
+        id:
+          type: string
+        kind:
+          type: string
+        row_count:
+          type: integer
+          format: int64
+        size_bytes:
+          type: integer
+          format: int64
+      required:
+      - kind
+      - date
+      - size_bytes
+      - row_count
+      - checksum
+      - id
+      - created_at
+      - download_path
+    Schema:
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectedColumn'
+      required:
+      - fields
+    ProblemDetails:
+      type: object
+      properties:
+        detail:
+          type: string
+        instance:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - title
+      - status
+      - detail
+    AnonymizerStreamEntry:
+      type: object
+      description: A single anonymizer event from the real-time anonymizer stream. Contains IP ranges rather than individual addresses.
+      properties:
+        asn:
+          type: integer
+          format: int32
+          description: Autonomous System Number of range_start
+        country_code:
+          type: string
+          description: ISO 3166-1 alpha-2 country code of range_start
+        provider:
+          type: string
+          description: Provider name
+        range_end:
+          type: string
+          description: End of the anonymizer IP range
+        range_start:
+          type: string
+          description: Start of the anonymizer IP range
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds since epoch, UTC)
+        type:
+          type: string
+          description: Proxy/anonymizer type
+    ExportMetaResponse:
+      type: object
+      properties:
+        checksum:
+          type: string
+        created_at:
+          type: integer
+          format: int64
+        date:
+          type: integer
+          format: int64
+        format:
+          type: string
+        hour:
+          type: integer
+        id:
+          type: string
+        kind:
+          type: string
+        rows:
+          type: integer
+          format: int64
+        schema:
+          $ref: '#/components/schemas/Schema'
+        size:
+          type: integer
+          format: int64
+        stream:
+          type: string
+      required:
+      - checksum
+      - date
+      - format
+      - size
+      - rows
+      - schema
+      - stream
+      - kind
+      - id
+      - created_at
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+      description: Private API key passed in the X-Api-Key header.

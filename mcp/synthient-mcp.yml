@@ -1,0 +1,9 @@
+generated: '2026-09-28'
+method: probed
+source: https://docs.synthient.com/ai/mcp
+deployment:
+  mode: local-stdio
+  install: "brew install synthient/tap/synthient"
+  package: ""
+  auth: api-key
+  verified: probed

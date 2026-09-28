@@ -1,0 +1,544 @@
+generated: '2026-09-28'
+method: generated
+source: openapi/synthient-openapi.json
+description: Recommended x-agentic-access execution contracts, classified heuristically from
+  the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
+  audience per deployment. See research/curity/agentic-governance/.
+summary:
+  operations: 53
+  by_action_class:
+    connected: 53
+  by_consequence:
+    read: 53
+  human_in_the_loop_required: 0
+operations:
+- path: /account/me
+  method: get
+  operationId: getAccountInfo
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/anonymizers/export
+  method: get
+  operationId: listAnonymizersExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/anonymizers/export/{date}
+  method: get
+  operationId: downloadAnonymizersExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/anonymizers/export/{date}/meta
+  method: get
+  operationId: getAnonymizersExportMeta
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/anonymizers/export/{date}/{hour}
+  method: get
+  operationId: downloadAnonymizersHourlyExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/anonymizers/export/{date}/{hour}/meta
+  method: get
+  operationId: getAnonymizersHourlyExportMeta
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/anonymizers/stream
+  method: get
+  operationId: streamAnonymizers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/adb/export
+  method: get
+  operationId: listHoneypotADBExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/adb/export/{date}
+  method: get
+  operationId: downloadHoneypotADBExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/adb/export/{date}/meta
+  method: get
+  operationId: getHoneypotADBExportMeta
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/adb/export/{date}/{hour}
+  method: get
+  operationId: downloadHoneypotADBHourlyExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/adb/export/{date}/{hour}/meta
+  method: get
+  operationId: getHoneypotADBHourlyExportMeta
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/adb/stream
+  method: get
+  operationId: streamHoneypotADB
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/dns/export
+  method: get
+  operationId: listHoneypotDNSExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/dns/export/{date}
+  method: get
+  operationId: downloadHoneypotDNSExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/dns/export/{date}/meta
+  method: get
+  operationId: getHoneypotDNSExportMeta
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/dns/export/{date}/{hour}
+  method: get
+  operationId: downloadHoneypotDNSHourlyExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/dns/export/{date}/{hour}/meta
+  method: get
+  operationId: getHoneypotDNSHourlyExportMeta
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/dns/stream
+  method: get
+  operationId: streamHoneypotDNS
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/http/export
+  method: get
+  operationId: listHoneypotHTTPExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/http/export/{date}
+  method: get
+  operationId: downloadHoneypotHTTPExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/http/export/{date}/meta
+  method: get
+  operationId: getHoneypotHTTPExportMeta
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/http/export/{date}/{hour}
+  method: get
+  operationId: downloadHoneypotHTTPHourlyExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/http/export/{date}/{hour}/meta
+  method: get
+  operationId: getHoneypotHTTPHourlyExportMeta
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/http/stream
+  method: get
+  operationId: streamHoneypotHTTP
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/https/export
+  method: get
+  operationId: listHoneypotHTTPSExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/https/export/{date}
+  method: get
+  operationId: downloadHoneypotHTTPSExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/https/export/{date}/meta
+  method: get
+  operationId: getHoneypotHTTPSExportMeta
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/https/export/{date}/{hour}
+  method: get
+  operationId: downloadHoneypotHTTPSHourlyExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/https/export/{date}/{hour}/meta
+  method: get
+  operationId: getHoneypotHTTPSHourlyExportMeta
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/helio/https/stream
+  method: get
+  operationId: streamHoneypotHTTPS
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/ja4t/export
+  method: get
+  operationId: listJA4TExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/ja4t/export/{date}
+  method: get
+  operationId: downloadJA4TExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/ja4t/export/{date}/meta
+  method: get
+  operationId: getJA4TExportMeta
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/ja4t/export/{date}/{hour}
+  method: get
+  operationId: downloadJA4THourlyExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/ja4t/export/{date}/{hour}/meta
+  method: get
+  operationId: getJA4THourlyExportMeta
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/ja4t/stream
+  method: get
+  operationId: streamJA4T
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/proxies/export
+  method: get
+  operationId: listProxiesExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/proxies/export/{date}
+  method: get
+  operationId: downloadProxiesExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/proxies/export/{date}/meta
+  method: get
+  operationId: getProxiesExportMeta
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/proxies/export/{date}/{hour}
+  method: get
+  operationId: downloadProxiesHourlyExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/proxies/export/{date}/{hour}/meta
+  method: get
+  operationId: getProxiesHourlyExportMeta
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/proxies/stream
+  method: get
+  operationId: streamProxies
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/torrents/export
+  method: get
+  operationId: listTorrentsExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/torrents/export/{date}
+  method: get
+  operationId: downloadTorrentsExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/torrents/export/{date}/meta
+  method: get
+  operationId: getTorrentsExportMeta
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/torrents/export/{date}/{hour}
+  method: get
+  operationId: downloadTorrentsHourlyExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/torrents/export/{date}/{hour}/meta
+  method: get
+  operationId: getTorrentsHourlyExportMeta
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feeds/torrents/stream
+  method: get
+  operationId: streamTorrents
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /health
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /lookup/domain/{domain}
+  method: get
+  operationId: domainLookup
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /lookup/ip/{ip_address}
+  method: get
+  operationId: ipLookup
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /lookup/ips
+  method: post
+  operationId: lookupIpBatch
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none

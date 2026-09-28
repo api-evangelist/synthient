@@ -1,0 +1,275 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/synthient/main/json-schema/synthient-domain-lookup-response-schema.json",
+  "title": "DomainLookupResponse",
+  "x-generated": "2026-09-28",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/synthient-openapi.json#/components/schemas/DomainLookupResponse",
+  "type": "object",
+  "properties": {
+    "activity_stats": {
+      "$ref": "#/$defs/ActivityStatsBlock"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "geo_distribution": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CountryEntry"
+      }
+    },
+    "hour_dow_heatmap": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "recent_events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/RecentEvent"
+      }
+    },
+    "stats": {
+      "$ref": "#/$defs/Stats"
+    },
+    "status": {
+      "type": "string"
+    },
+    "time_series": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/TimeSeriesEntry"
+      }
+    },
+    "top_asn": {
+      "$ref": "#/$defs/ASNEntry"
+    },
+    "top_ports": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/PortEntry"
+      }
+    },
+    "top_subdomains": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/SubdomainEntry"
+      }
+    },
+    "unique_ips": {
+      "$ref": "#/$defs/UniqueIPsBlock"
+    }
+  },
+  "required": [
+    "domain",
+    "status",
+    "stats",
+    "time_series",
+    "unique_ips",
+    "top_subdomains",
+    "top_ports",
+    "geo_distribution",
+    "hour_dow_heatmap",
+    "activity_stats",
+    "recent_events"
+  ],
+  "$defs": {
+    "ASNEntry": {
+      "type": "object",
+      "properties": {
+        "asn": {
+          "type": "integer"
+        },
+        "events": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "asn",
+        "events"
+      ]
+    },
+    "ActivityStatsBlock": {
+      "type": "object",
+      "properties": {
+        "cadence": {
+          "type": "string"
+        },
+        "median_per_hour": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "p95_per_hour": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "peak_hour": {
+          "type": "integer"
+        },
+        "quiet_hour": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "peak_hour",
+        "quiet_hour",
+        "median_per_hour",
+        "p95_per_hour",
+        "cadence"
+      ]
+    },
+    "CountryEntry": {
+      "type": "object",
+      "properties": {
+        "country_code": {
+          "type": "string"
+        },
+        "events": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "unique_ips": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "country_code",
+        "unique_ips",
+        "events"
+      ]
+    },
+    "PortEntry": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "port": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "port",
+        "count"
+      ]
+    },
+    "RecentEvent": {
+      "type": "object",
+      "properties": {
+        "country_code": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer"
+        },
+        "source_ip_masked": {
+          "type": "string"
+        },
+        "target_subdomain": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "timestamp",
+        "source_ip_masked",
+        "target_subdomain",
+        "port",
+        "country_code"
+      ]
+    },
+    "Stats": {
+      "type": "object",
+      "properties": {
+        "events_24h": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "total_events_30d": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "total_events_30d",
+        "events_24h"
+      ]
+    },
+    "SubdomainEntry": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "subdomain": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "subdomain",
+        "count"
+      ]
+    },
+    "TimeSeriesEntry": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "events": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "unique_ips": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "date",
+        "events",
+        "unique_ips"
+      ]
+    },
+    "UniqueIPsBlock": {
+      "type": "object",
+      "properties": {
+        "sparkline_24h": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "value_24h": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "value_30d": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "value_24h",
+        "value_30d",
+        "sparkline_24h"
+      ]
+    }
+  }
+}
