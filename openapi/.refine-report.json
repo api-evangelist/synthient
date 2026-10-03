@@ -1,7 +1,7 @@
 {
   "provider": "synthient",
   "sources": [
-    "synthient-openapi.json"
+    "_original/synthient-openapi.json"
   ],
   "outputs": [
     "synthient-account-api-openapi.yml",
@@ -12,14 +12,21 @@
     "synthient-proxies-api-openapi.yml",
     "synthient-torrents-api-openapi.yml"
   ],
-  "archived": [
-    "archived openapi/synthient-openapi.json"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "synthient-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "apis.yml register: written (+7 apis, 7 total)"
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "synthient-account-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "synthient-anonymizers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "synthient-helios-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "synthient-ja4t-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "synthient-lookup-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "synthient-proxies-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "synthient-torrents-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

@@ -371,116 +371,6 @@ paths:
                 $ref: '#/components/schemas/ProblemDetails'
 components:
   schemas:
-    ExportListResponse:
-      type: object
-      properties:
-        feeds:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExportListItem'
-        next_cursor:
-          type: string
-        stream:
-          type: string
-      required:
-      - stream
-      - feeds
-    ProjectedColumn:
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          type: string
-      required:
-      - name
-      - type
-    ExportListItem:
-      type: object
-      properties:
-        checksum:
-          type: string
-        created_at:
-          type: integer
-          format: int64
-        date:
-          type: string
-        download_path:
-          type: string
-        hour:
-          type: integer
-        id:
-          type: string
-        kind:
-          type: string
-        row_count:
-          type: integer
-          format: int64
-        size_bytes:
-          type: integer
-          format: int64
-      required:
-      - kind
-      - date
-      - size_bytes
-      - row_count
-      - checksum
-      - id
-      - created_at
-      - download_path
-    JA4TStreamEntry:
-      type: object
-      properties:
-        asn:
-          type: integer
-          format: int32
-          description: Autonomous System Number of the IP
-        country_code:
-          type: string
-          description: ISO 3166-1 alpha-2 country code of the IP
-        ip:
-          type: string
-          description: IPv4 or IPv6 address of the sighting
-        ja4t:
-          type: string
-          description: JA4T TCP fingerprint
-        provider:
-          type: string
-          description: Provider that surfaced this sighting
-        timestamp:
-          type: integer
-          format: int64
-          description: Unix timestamp (seconds since epoch, UTC)
-        type:
-          type: string
-          description: ProxyType category (e.g. DATACENTER_PROXY, RESIDENTIAL_PROXY)
-    Schema:
-      type: object
-      properties:
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProjectedColumn'
-      required:
-      - fields
-    ProblemDetails:
-      type: object
-      properties:
-        detail:
-          type: string
-        instance:
-          type: string
-        status:
-          type: integer
-        title:
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - title
-      - status
-      - detail
     ExportMetaResponse:
       type: object
       properties:
@@ -521,6 +411,116 @@ components:
       - kind
       - id
       - created_at
+    ProblemDetails:
+      type: object
+      properties:
+        detail:
+          type: string
+        instance:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - title
+      - status
+      - detail
+    ProjectedColumn:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+      required:
+      - name
+      - type
+    ExportListResponse:
+      type: object
+      properties:
+        feeds:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExportListItem'
+        next_cursor:
+          type: string
+        stream:
+          type: string
+      required:
+      - stream
+      - feeds
+    JA4TStreamEntry:
+      type: object
+      properties:
+        asn:
+          type: integer
+          format: int32
+          description: Autonomous System Number of the IP
+        country_code:
+          type: string
+          description: ISO 3166-1 alpha-2 country code of the IP
+        ip:
+          type: string
+          description: IPv4 or IPv6 address of the sighting
+        ja4t:
+          type: string
+          description: JA4T TCP fingerprint
+        provider:
+          type: string
+          description: Provider that surfaced this sighting
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds since epoch, UTC)
+        type:
+          type: string
+          description: ProxyType category (e.g. DATACENTER_PROXY, RESIDENTIAL_PROXY)
+    Schema:
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectedColumn'
+      required:
+      - fields
+    ExportListItem:
+      type: object
+      properties:
+        checksum:
+          type: string
+        created_at:
+          type: integer
+          format: int64
+        date:
+          type: string
+        download_path:
+          type: string
+        hour:
+          type: integer
+        id:
+          type: string
+        kind:
+          type: string
+        row_count:
+          type: integer
+          format: int64
+        size_bytes:
+          type: integer
+          format: int64
+      required:
+      - kind
+      - date
+      - size_bytes
+      - row_count
+      - checksum
+      - id
+      - created_at
+      - download_path
   securitySchemes:
     apiKeyAuth:
       type: apiKey

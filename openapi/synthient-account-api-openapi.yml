@@ -72,6 +72,20 @@ paths:
                     example: unhealthy
 components:
   schemas:
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        relation:
+          type: string
+      required:
+      - id
+      - name
+      - relation
     AccountAPIKey:
       type: object
       properties:
@@ -87,18 +101,6 @@ components:
       - id
       - name
       - created_at
-    LookupQuota:
-      type: object
-      properties:
-        credits:
-          type: integer
-          format: int64
-        resets_in:
-          type: integer
-          format: int64
-      required:
-      - credits
-      - resets_in
     ProblemDetails:
       type: object
       properties:
@@ -143,20 +145,18 @@ components:
       - organization
       - scopes
       - lookup_quota
-    Organization:
+    LookupQuota:
       type: object
       properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        relation:
-          type: string
+        credits:
+          type: integer
+          format: int64
+        resets_in:
+          type: integer
+          format: int64
       required:
-      - id
-      - name
-      - relation
+      - credits
+      - resets_in
   securitySchemes:
     apiKeyAuth:
       type: apiKey

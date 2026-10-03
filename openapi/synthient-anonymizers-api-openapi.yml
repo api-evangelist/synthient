@@ -371,90 +371,6 @@ paths:
                 $ref: '#/components/schemas/ProblemDetails'
 components:
   schemas:
-    ExportListResponse:
-      type: object
-      properties:
-        feeds:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExportListItem'
-        next_cursor:
-          type: string
-        stream:
-          type: string
-      required:
-      - stream
-      - feeds
-    ProjectedColumn:
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          type: string
-      required:
-      - name
-      - type
-    ExportListItem:
-      type: object
-      properties:
-        checksum:
-          type: string
-        created_at:
-          type: integer
-          format: int64
-        date:
-          type: string
-        download_path:
-          type: string
-        hour:
-          type: integer
-        id:
-          type: string
-        kind:
-          type: string
-        row_count:
-          type: integer
-          format: int64
-        size_bytes:
-          type: integer
-          format: int64
-      required:
-      - kind
-      - date
-      - size_bytes
-      - row_count
-      - checksum
-      - id
-      - created_at
-      - download_path
-    Schema:
-      type: object
-      properties:
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProjectedColumn'
-      required:
-      - fields
-    ProblemDetails:
-      type: object
-      properties:
-        detail:
-          type: string
-        instance:
-          type: string
-        status:
-          type: integer
-        title:
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - title
-      - status
-      - detail
     AnonymizerStreamEntry:
       type: object
       description: A single anonymizer event from the real-time anonymizer stream. Contains IP ranges rather than individual addresses.
@@ -522,6 +438,90 @@ components:
       - kind
       - id
       - created_at
+    ProblemDetails:
+      type: object
+      properties:
+        detail:
+          type: string
+        instance:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - title
+      - status
+      - detail
+    ProjectedColumn:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+      required:
+      - name
+      - type
+    ExportListResponse:
+      type: object
+      properties:
+        feeds:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExportListItem'
+        next_cursor:
+          type: string
+        stream:
+          type: string
+      required:
+      - stream
+      - feeds
+    Schema:
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectedColumn'
+      required:
+      - fields
+    ExportListItem:
+      type: object
+      properties:
+        checksum:
+          type: string
+        created_at:
+          type: integer
+          format: int64
+        date:
+          type: string
+        download_path:
+          type: string
+        hour:
+          type: integer
+        id:
+          type: string
+        kind:
+          type: string
+        row_count:
+          type: integer
+          format: int64
+        size_bytes:
+          type: integer
+          format: int64
+      required:
+      - kind
+      - date
+      - size_bytes
+      - row_count
+      - checksum
+      - id
+      - created_at
+      - download_path
   securitySchemes:
     apiKeyAuth:
       type: apiKey

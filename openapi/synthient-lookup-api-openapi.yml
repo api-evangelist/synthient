@@ -169,103 +169,6 @@ paths:
                 $ref: '#/components/schemas/ProblemDetails'
 components:
   schemas:
-    TimeSeriesEntry:
-      type: object
-      properties:
-        date:
-          type: integer
-          format: int64
-        events:
-          type: integer
-          format: int64
-        unique_ips:
-          type: integer
-          format: int64
-      required:
-      - date
-      - events
-      - unique_ips
-    SubdomainEntry:
-      type: object
-      properties:
-        count:
-          type: integer
-          format: int64
-        subdomain:
-          type: string
-      required:
-      - subdomain
-      - count
-    ProblemDetails:
-      type: object
-      properties:
-        detail:
-          type: string
-        instance:
-          type: string
-        status:
-          type: integer
-        title:
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - title
-      - status
-      - detail
-    Stats:
-      type: object
-      properties:
-        events_24h:
-          type: integer
-          format: int64
-        total_events_30d:
-          type: integer
-          format: int64
-      required:
-      - total_events_30d
-      - events_24h
-    IntelligenceInfo:
-      type: object
-      properties:
-        behavior:
-          type: array
-          items:
-            type: string
-        categories:
-          type: array
-          items:
-            type: string
-        devices:
-          type: array
-          items:
-            $ref: '#/components/schemas/DeviceInfo'
-        providers:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProviderEntry'
-        risk_score:
-          type: integer
-      required:
-      - risk_score
-      - devices
-      - behavior
-      - categories
-      - providers
-    IpProvidersResponse:
-      type: object
-      properties:
-        intelligence:
-          $ref: '#/components/schemas/IntelligenceInfo'
-        ip:
-          type: string
-        location:
-          $ref: '#/components/schemas/LocationInfo'
-        network:
-          $ref: '#/components/schemas/NetworkInfo'
-      required:
-      - ip
     NetworkInfo:
       type: object
       properties:
@@ -287,45 +190,16 @@ components:
       - asn
       - isp
       - type
-    LocationInfo:
+    ASNEntry:
       type: object
       properties:
-        city:
-          type: string
-        country:
-          type: string
-        geo_hash:
-          type: string
-        latitude:
-          type: number
-        longitude:
-          type: number
-        state:
-          type: string
-        timezone:
-          type: string
-      required:
-      - country
-      - state
-      - city
-      - timezone
-      - longitude
-      - latitude
-      - geo_hash
-    CountryEntry:
-      type: object
-      properties:
-        country_code:
-          type: string
+        asn:
+          type: integer
         events:
           type: integer
           format: int64
-        unique_ips:
-          type: integer
-          format: int64
       required:
-      - country_code
-      - unique_ips
+      - asn
       - events
     DomainLookupResponse:
       type: object
@@ -381,6 +255,166 @@ components:
       - hour_dow_heatmap
       - activity_stats
       - recent_events
+    IpBatchResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/IpProvidersResponse'
+      required:
+      - results
+    CountryEntry:
+      type: object
+      properties:
+        country_code:
+          type: string
+        events:
+          type: integer
+          format: int64
+        unique_ips:
+          type: integer
+          format: int64
+      required:
+      - country_code
+      - unique_ips
+      - events
+    UniqueIPsBlock:
+      type: object
+      properties:
+        sparkline_24h:
+          type: array
+          items:
+            type: integer
+            format: int64
+        value_24h:
+          type: integer
+          format: int64
+        value_30d:
+          type: integer
+          format: int64
+      required:
+      - value_24h
+      - value_30d
+      - sparkline_24h
+    Stats:
+      type: object
+      properties:
+        events_24h:
+          type: integer
+          format: int64
+        total_events_30d:
+          type: integer
+          format: int64
+      required:
+      - total_events_30d
+      - events_24h
+    IntelligenceInfo:
+      type: object
+      properties:
+        behavior:
+          type: array
+          items:
+            type: string
+        categories:
+          type: array
+          items:
+            type: string
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceInfo'
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderEntry'
+        risk_score:
+          type: integer
+      required:
+      - risk_score
+      - devices
+      - behavior
+      - categories
+      - providers
+    ProblemDetails:
+      type: object
+      properties:
+        detail:
+          type: string
+        instance:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - title
+      - status
+      - detail
+    ProviderEntry:
+      type: object
+      properties:
+        last_seen:
+          type: integer
+          format: int64
+        provider:
+          type: string
+        type:
+          type: string
+      required:
+      - provider
+      - type
+      - last_seen
+    LocationInfo:
+      type: object
+      properties:
+        city:
+          type: string
+        country:
+          type: string
+        geo_hash:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        state:
+          type: string
+        timezone:
+          type: string
+      required:
+      - country
+      - state
+      - city
+      - timezone
+      - longitude
+      - latitude
+      - geo_hash
+    IpProvidersResponse:
+      type: object
+      properties:
+        intelligence:
+          $ref: '#/components/schemas/IntelligenceInfo'
+        ip:
+          type: string
+        location:
+          $ref: '#/components/schemas/LocationInfo'
+        network:
+          $ref: '#/components/schemas/NetworkInfo'
+      required:
+      - ip
+    IpBatchRequest:
+      type: object
+      properties:
+        ips:
+          type: array
+          items:
+            type: string
+      required:
+      - ips
     ActivityStatsBlock:
       type: object
       properties:
@@ -402,24 +436,17 @@ components:
       - median_per_hour
       - p95_per_hour
       - cadence
-    UniqueIPsBlock:
+    SubdomainEntry:
       type: object
       properties:
-        sparkline_24h:
-          type: array
-          items:
-            type: integer
-            format: int64
-        value_24h:
+        count:
           type: integer
           format: int64
-        value_30d:
-          type: integer
-          format: int64
+        subdomain:
+          type: string
       required:
-      - value_24h
-      - value_30d
-      - sparkline_24h
+      - subdomain
+      - count
     PortEntry:
       type: object
       properties:
@@ -451,26 +478,22 @@ components:
       - target_subdomain
       - port
       - country_code
-    IpBatchResponse:
+    TimeSeriesEntry:
       type: object
       properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/IpProvidersResponse'
-      required:
-      - results
-    ASNEntry:
-      type: object
-      properties:
-        asn:
+        date:
           type: integer
+          format: int64
         events:
           type: integer
           format: int64
+        unique_ips:
+          type: integer
+          format: int64
       required:
-      - asn
+      - date
       - events
+      - unique_ips
     DeviceInfo:
       type: object
       properties:
@@ -485,29 +508,6 @@ components:
       - os
       - version
       - last_seen
-    ProviderEntry:
-      type: object
-      properties:
-        last_seen:
-          type: integer
-          format: int64
-        provider:
-          type: string
-        type:
-          type: string
-      required:
-      - provider
-      - type
-      - last_seen
-    IpBatchRequest:
-      type: object
-      properties:
-        ips:
-          type: array
-          items:
-            type: string
-      required:
-      - ips
     ValidationProblemDetails:
       type: object
       properties:

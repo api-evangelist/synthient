@@ -371,134 +371,6 @@ paths:
                 $ref: '#/components/schemas/ProblemDetails'
 components:
   schemas:
-    ExportListResponse:
-      type: object
-      properties:
-        feeds:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExportListItem'
-        next_cursor:
-          type: string
-        stream:
-          type: string
-      required:
-      - stream
-      - feeds
-    TorrentStreamEntry:
-      type: object
-      properties:
-        file_count:
-          type: integer
-        files:
-          type: array
-          items:
-            $ref: '#/components/schemas/TorrentFileEntry'
-        info_hash:
-          type: string
-          description: 40-character hex SHA-1 info hash
-        magnet_uri:
-          type: string
-        name:
-          type: string
-          description: Torrent name from metadata
-        peers:
-          type: array
-          items:
-            $ref: '#/components/schemas/TorrentPeerEntry'
-        piece_length:
-          type: integer
-        timestamp:
-          type: integer
-          format: int64
-          description: Unix timestamp (seconds since epoch, UTC)
-        total_size:
-          type: integer
-          format: int64
-          description: Total size of files in bytes
-    ProjectedColumn:
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          type: string
-      required:
-      - name
-      - type
-    ExportListItem:
-      type: object
-      properties:
-        checksum:
-          type: string
-        created_at:
-          type: integer
-          format: int64
-        date:
-          type: string
-        download_path:
-          type: string
-        hour:
-          type: integer
-        id:
-          type: string
-        kind:
-          type: string
-        row_count:
-          type: integer
-          format: int64
-        size_bytes:
-          type: integer
-          format: int64
-      required:
-      - kind
-      - date
-      - size_bytes
-      - row_count
-      - checksum
-      - id
-      - created_at
-      - download_path
-    Schema:
-      type: object
-      properties:
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProjectedColumn'
-      required:
-      - fields
-    TorrentPeerEntry:
-      type: object
-      properties:
-        encrypted:
-          type: boolean
-        ip:
-          type: string
-          description: IPv4 or IPv6 address of the peer
-        port:
-          type: integer
-        source:
-          type: string
-          description: DHT, PEX, or tracker
-    ProblemDetails:
-      type: object
-      properties:
-        detail:
-          type: string
-        instance:
-          type: string
-        status:
-          type: integer
-        title:
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - title
-      - status
-      - detail
     ExportMetaResponse:
       type: object
       properties:
@@ -539,6 +411,37 @@ components:
       - kind
       - id
       - created_at
+    TorrentStreamEntry:
+      type: object
+      properties:
+        file_count:
+          type: integer
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/TorrentFileEntry'
+        info_hash:
+          type: string
+          description: 40-character hex SHA-1 info hash
+        magnet_uri:
+          type: string
+        name:
+          type: string
+          description: Torrent name from metadata
+        peers:
+          type: array
+          items:
+            $ref: '#/components/schemas/TorrentPeerEntry'
+        piece_length:
+          type: integer
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds since epoch, UTC)
+        total_size:
+          type: integer
+          format: int64
+          description: Total size of files in bytes
     TorrentFileEntry:
       type: object
       properties:
@@ -547,6 +450,103 @@ components:
           format: int64
         path:
           type: string
+    ProblemDetails:
+      type: object
+      properties:
+        detail:
+          type: string
+        instance:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - title
+      - status
+      - detail
+    ProjectedColumn:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+      required:
+      - name
+      - type
+    TorrentPeerEntry:
+      type: object
+      properties:
+        encrypted:
+          type: boolean
+        ip:
+          type: string
+          description: IPv4 or IPv6 address of the peer
+        port:
+          type: integer
+        source:
+          type: string
+          description: DHT, PEX, or tracker
+    ExportListResponse:
+      type: object
+      properties:
+        feeds:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExportListItem'
+        next_cursor:
+          type: string
+        stream:
+          type: string
+      required:
+      - stream
+      - feeds
+    Schema:
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectedColumn'
+      required:
+      - fields
+    ExportListItem:
+      type: object
+      properties:
+        checksum:
+          type: string
+        created_at:
+          type: integer
+          format: int64
+        date:
+          type: string
+        download_path:
+          type: string
+        hour:
+          type: integer
+        id:
+          type: string
+        kind:
+          type: string
+        row_count:
+          type: integer
+          format: int64
+        size_bytes:
+          type: integer
+          format: int64
+      required:
+      - kind
+      - date
+      - size_bytes
+      - row_count
+      - checksum
+      - id
+      - created_at
+      - download_path
   securitySchemes:
     apiKeyAuth:
       type: apiKey

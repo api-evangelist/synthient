@@ -1448,161 +1448,6 @@ paths:
                 $ref: '#/components/schemas/ProblemDetails'
 components:
   schemas:
-    ExportListResponse:
-      type: object
-      properties:
-        feeds:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExportListItem'
-        next_cursor:
-          type: string
-        stream:
-          type: string
-      required:
-      - stream
-      - feeds
-    ProjectedColumn:
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          type: string
-      required:
-      - name
-      - type
-    HoneypotADBStreamEntry:
-      type: object
-      properties:
-        command:
-          type: string
-          format: byte
-          description: Shell command executed (base64-encoded bytes)
-        hash:
-          type: string
-          description: Command hash
-        sequential_id:
-          type: integer
-        session:
-          type: string
-          description: ADB session hash
-    Schema:
-      type: object
-      properties:
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProjectedColumn'
-      required:
-      - fields
-    HoneypotDNSStreamEntry:
-      type: object
-      properties:
-        domain:
-          type: string
-          description: DNS name the attacker asked the honeypot to resolve
-        meta:
-          $ref: '#/components/schemas/HoneypotMeta'
-        port:
-          type: integer
-          description: Destination port (53, 853, 5353)
-        timestamp:
-          type: integer
-          format: int64
-          description: Unix timestamp (seconds since epoch, UTC)
-        tunnel_id:
-          type: integer
-          format: int64
-    ExportListItem:
-      type: object
-      properties:
-        checksum:
-          type: string
-        created_at:
-          type: integer
-          format: int64
-        date:
-          type: string
-        download_path:
-          type: string
-        hour:
-          type: integer
-        id:
-          type: string
-        kind:
-          type: string
-        row_count:
-          type: integer
-          format: int64
-        size_bytes:
-          type: integer
-          format: int64
-      required:
-      - kind
-      - date
-      - size_bytes
-      - row_count
-      - checksum
-      - id
-      - created_at
-      - download_path
-    HoneypotHTTPSStreamEntry:
-      type: object
-      properties:
-        details:
-          type: string
-          description: TLS ClientHello details as a JSON-encoded string (cipher suites, extensions, supported curves, ALPN)
-        domain:
-          type: string
-        meta:
-          $ref: '#/components/schemas/HoneypotMeta'
-        port:
-          type: integer
-        raw:
-          type: string
-          format: byte
-          description: Base64-encoded raw ClientHello bytes; omitted when not captured.
-        timestamp:
-          type: integer
-          format: int64
-          description: Unix timestamp (seconds since epoch, UTC)
-        tunnel_id:
-          type: integer
-          format: int64
-    ProblemDetails:
-      type: object
-      properties:
-        detail:
-          type: string
-        instance:
-          type: string
-        status:
-          type: integer
-        title:
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - title
-      - status
-      - detail
-    HoneypotMeta:
-      type: object
-      properties:
-        pool_id:
-          type: string
-          description: Pool identifier
-        provider:
-          type: string
-          description: Provider name
-        proxy_ip:
-          type: string
-          description: Source proxy IP address
-        server:
-          type: string
-          description: Honeypot server identifier
     ExportMetaResponse:
       type: object
       properties:
@@ -1643,6 +1488,161 @@ components:
       - kind
       - id
       - created_at
+    HoneypotHTTPSStreamEntry:
+      type: object
+      properties:
+        details:
+          type: string
+          description: TLS ClientHello details as a JSON-encoded string (cipher suites, extensions, supported curves, ALPN)
+        domain:
+          type: string
+        meta:
+          $ref: '#/components/schemas/HoneypotMeta'
+        port:
+          type: integer
+        raw:
+          type: string
+          format: byte
+          description: Base64-encoded raw ClientHello bytes; omitted when not captured.
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds since epoch, UTC)
+        tunnel_id:
+          type: integer
+          format: int64
+    HoneypotADBStreamEntry:
+      type: object
+      properties:
+        command:
+          type: string
+          format: byte
+          description: Shell command executed (base64-encoded bytes)
+        hash:
+          type: string
+          description: Command hash
+        sequential_id:
+          type: integer
+        session:
+          type: string
+          description: ADB session hash
+    ProblemDetails:
+      type: object
+      properties:
+        detail:
+          type: string
+        instance:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - title
+      - status
+      - detail
+    ProjectedColumn:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+      required:
+      - name
+      - type
+    ExportListResponse:
+      type: object
+      properties:
+        feeds:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExportListItem'
+        next_cursor:
+          type: string
+        stream:
+          type: string
+      required:
+      - stream
+      - feeds
+    Schema:
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectedColumn'
+      required:
+      - fields
+    HoneypotDNSStreamEntry:
+      type: object
+      properties:
+        domain:
+          type: string
+          description: DNS name the attacker asked the honeypot to resolve
+        meta:
+          $ref: '#/components/schemas/HoneypotMeta'
+        port:
+          type: integer
+          description: Destination port (53, 853, 5353)
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds since epoch, UTC)
+        tunnel_id:
+          type: integer
+          format: int64
+    HoneypotMeta:
+      type: object
+      properties:
+        pool_id:
+          type: string
+          description: Pool identifier
+        provider:
+          type: string
+          description: Provider name
+        proxy_ip:
+          type: string
+          description: Source proxy IP address
+        server:
+          type: string
+          description: Honeypot server identifier
+    ExportListItem:
+      type: object
+      properties:
+        checksum:
+          type: string
+        created_at:
+          type: integer
+          format: int64
+        date:
+          type: string
+        download_path:
+          type: string
+        hour:
+          type: integer
+        id:
+          type: string
+        kind:
+          type: string
+        row_count:
+          type: integer
+          format: int64
+        size_bytes:
+          type: integer
+          format: int64
+      required:
+      - kind
+      - date
+      - size_bytes
+      - row_count
+      - checksum
+      - id
+      - created_at
+      - download_path
     HoneypotHTTPStreamEntry:
       type: object
       properties:
