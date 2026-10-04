@@ -24,6 +24,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/synthient-capability-edges.yml
+  name: Synthient API Business Capability Map
 - type: AgenticAccess
   url: agentic-access/synthient-agentic-access.yml
 - type: RateLimits

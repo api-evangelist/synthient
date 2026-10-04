@@ -1,0 +1,56 @@
+slug: synthient
+provider: Synthient API
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 4
+edges:
+- tag: Helios
+  spec_file: synthient-helios-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.78
+  evidence: GET /feeds/helio/adb/stream  "Stream Helios honeypot ADB shell commands in real time"; HoneypotDNSStreamEntry,
+    HoneypotHTTPStreamEntry
+  reason: Honeypot-derived attacker telemetry (shell commands, DNS queries, HTTP probes) is classic threat
+    intelligence feeding detection and response; no other candidate capability fits honeypot data.
+- tag: Lookup
+  spec_file: synthient-lookup-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.75
+  evidence: GET /lookup/domain/{domain}  "Look up honeypot intelligence for a domain"; IntelligenceInfo,
+    RecentEvent, IpProvidersResponse
+  reason: On-demand IP/domain enrichment with honeypot intelligence is the core detection-support surface
+    of a threat-intel provider; used for cybersecurity and fraud screening rather than any customer-data
+    capability.
+- tag: Anonymizers
+  spec_file: synthient-anonymizers-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.7
+  evidence: 'GET /feeds/anonymizers/stream  streamAnonymizer events in real time; AnonymizerStreamEntry;
+    vendor: "anonymized IP data ... for cybersecurity and fraud prevention"'
+  reason: Real-time and bulk feeds of anonymizer/VPN IP sightings are threat-intelligence signals consumed
+    for detection, so Threat Detection & Response is the honest fit; the delivery mechanism is largely
+    data export, which tempers confidence.
+- tag: JA4T
+  spec_file: synthient-ja4t-api-openapi.yml
+  capability_id: BC-620.30
+  capability_id_l1: BC-620
+  capability_name: Threat Detection & Response Management
+  confidence: 0.7
+  evidence: GET /feeds/ja4t/stream  "Stream JA4T TCP fingerprint sightings in real time"; JA4TStreamEntry
+  reason: TCP/TLS fingerprint sighting feeds are security telemetry used for attacker identification and
+    detection, mapping to Threat Detection & Response.
