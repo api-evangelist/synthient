@@ -411,6 +411,48 @@ components:
       - kind
       - id
       - created_at
+    Schema:
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectedColumn'
+      required:
+      - fields
+    ExportListItem:
+      type: object
+      properties:
+        checksum:
+          type: string
+        created_at:
+          type: integer
+          format: int64
+        date:
+          type: string
+        download_path:
+          type: string
+        hour:
+          type: integer
+        id:
+          type: string
+        kind:
+          type: string
+        row_count:
+          type: integer
+          format: int64
+        size_bytes:
+          type: integer
+          format: int64
+      required:
+      - kind
+      - date
+      - size_bytes
+      - row_count
+      - checksum
+      - id
+      - created_at
+      - download_path
     ProblemDetails:
       type: object
       properties:
@@ -479,48 +521,6 @@ components:
         type:
           type: string
           description: ProxyType category (e.g. DATACENTER_PROXY, RESIDENTIAL_PROXY)
-    Schema:
-      type: object
-      properties:
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProjectedColumn'
-      required:
-      - fields
-    ExportListItem:
-      type: object
-      properties:
-        checksum:
-          type: string
-        created_at:
-          type: integer
-          format: int64
-        date:
-          type: string
-        download_path:
-          type: string
-        hour:
-          type: integer
-        id:
-          type: string
-        kind:
-          type: string
-        row_count:
-          type: integer
-          format: int64
-        size_bytes:
-          type: integer
-          format: int64
-      required:
-      - kind
-      - date
-      - size_bytes
-      - row_count
-      - checksum
-      - id
-      - created_at
-      - download_path
   securitySchemes:
     apiKeyAuth:
       type: apiKey

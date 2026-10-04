@@ -371,33 +371,6 @@ paths:
                 $ref: '#/components/schemas/ProblemDetails'
 components:
   schemas:
-    AnonymizerStreamEntry:
-      type: object
-      description: A single anonymizer event from the real-time anonymizer stream. Contains IP ranges rather than individual addresses.
-      properties:
-        asn:
-          type: integer
-          format: int32
-          description: Autonomous System Number of range_start
-        country_code:
-          type: string
-          description: ISO 3166-1 alpha-2 country code of range_start
-        provider:
-          type: string
-          description: Provider name
-        range_end:
-          type: string
-          description: End of the anonymizer IP range
-        range_start:
-          type: string
-          description: Start of the anonymizer IP range
-        timestamp:
-          type: integer
-          format: int64
-          description: Unix timestamp (seconds since epoch, UTC)
-        type:
-          type: string
-          description: Proxy/anonymizer type
     ExportMetaResponse:
       type: object
       properties:
@@ -438,48 +411,6 @@ components:
       - kind
       - id
       - created_at
-    ProblemDetails:
-      type: object
-      properties:
-        detail:
-          type: string
-        instance:
-          type: string
-        status:
-          type: integer
-        title:
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - title
-      - status
-      - detail
-    ProjectedColumn:
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          type: string
-      required:
-      - name
-      - type
-    ExportListResponse:
-      type: object
-      properties:
-        feeds:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExportListItem'
-        next_cursor:
-          type: string
-        stream:
-          type: string
-      required:
-      - stream
-      - feeds
     Schema:
       type: object
       properties:
@@ -522,6 +453,75 @@ components:
       - id
       - created_at
       - download_path
+    ProblemDetails:
+      type: object
+      properties:
+        detail:
+          type: string
+        instance:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - title
+      - status
+      - detail
+    AnonymizerStreamEntry:
+      type: object
+      description: A single anonymizer event from the real-time anonymizer stream. Contains IP ranges rather than individual addresses.
+      properties:
+        asn:
+          type: integer
+          format: int32
+          description: Autonomous System Number of range_start
+        country_code:
+          type: string
+          description: ISO 3166-1 alpha-2 country code of range_start
+        provider:
+          type: string
+          description: Provider name
+        range_end:
+          type: string
+          description: End of the anonymizer IP range
+        range_start:
+          type: string
+          description: Start of the anonymizer IP range
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds since epoch, UTC)
+        type:
+          type: string
+          description: Proxy/anonymizer type
+    ProjectedColumn:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+      required:
+      - name
+      - type
+    ExportListResponse:
+      type: object
+      properties:
+        feeds:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExportListItem'
+        next_cursor:
+          type: string
+        stream:
+          type: string
+      required:
+      - stream
+      - feeds
   securitySchemes:
     apiKeyAuth:
       type: apiKey

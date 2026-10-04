@@ -169,37 +169,79 @@ paths:
                 $ref: '#/components/schemas/ProblemDetails'
 components:
   schemas:
-    NetworkInfo:
+    Stats:
       type: object
       properties:
-        abuse_email:
-          type: string
-        abuse_phone:
-          type: string
-        asn:
+        events_24h:
           type: integer
-        domain:
+          format: int64
+        total_events_30d:
+          type: integer
+          format: int64
+      required:
+      - total_events_30d
+      - events_24h
+    ValidationProblemDetails:
+      type: object
+      properties:
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        instance:
           type: string
-        isp:
-          type: string
-        org:
+        status:
+          type: integer
+        title:
           type: string
         type:
           type: string
       required:
-      - asn
-      - isp
       - type
-    ASNEntry:
+      - title
+      - status
+      - errors
+    LocationInfo:
       type: object
       properties:
-        asn:
-          type: integer
+        city:
+          type: string
+        country:
+          type: string
+        geo_hash:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        state:
+          type: string
+        timezone:
+          type: string
+      required:
+      - country
+      - state
+      - city
+      - timezone
+      - longitude
+      - latitude
+      - geo_hash
+    CountryEntry:
+      type: object
+      properties:
+        country_code:
+          type: string
         events:
           type: integer
           format: int64
+        unique_ips:
+          type: integer
+          format: int64
       required:
-      - asn
+      - country_code
+      - unique_ips
       - events
     DomainLookupResponse:
       type: object
@@ -255,60 +297,20 @@ components:
       - hour_dow_heatmap
       - activity_stats
       - recent_events
-    IpBatchResponse:
+    DeviceInfo:
       type: object
       properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/IpProvidersResponse'
-      required:
-      - results
-    CountryEntry:
-      type: object
-      properties:
-        country_code:
+        last_seen:
+          type: integer
+          format: int64
+        os:
           type: string
-        events:
-          type: integer
-          format: int64
-        unique_ips:
-          type: integer
-          format: int64
+        version:
+          type: string
       required:
-      - country_code
-      - unique_ips
-      - events
-    UniqueIPsBlock:
-      type: object
-      properties:
-        sparkline_24h:
-          type: array
-          items:
-            type: integer
-            format: int64
-        value_24h:
-          type: integer
-          format: int64
-        value_30d:
-          type: integer
-          format: int64
-      required:
-      - value_24h
-      - value_30d
-      - sparkline_24h
-    Stats:
-      type: object
-      properties:
-        events_24h:
-          type: integer
-          format: int64
-        total_events_30d:
-          type: integer
-          format: int64
-      required:
-      - total_events_30d
-      - events_24h
+      - os
+      - version
+      - last_seen
     IntelligenceInfo:
       type: object
       properties:
@@ -336,63 +338,6 @@ components:
       - behavior
       - categories
       - providers
-    ProblemDetails:
-      type: object
-      properties:
-        detail:
-          type: string
-        instance:
-          type: string
-        status:
-          type: integer
-        title:
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - title
-      - status
-      - detail
-    ProviderEntry:
-      type: object
-      properties:
-        last_seen:
-          type: integer
-          format: int64
-        provider:
-          type: string
-        type:
-          type: string
-      required:
-      - provider
-      - type
-      - last_seen
-    LocationInfo:
-      type: object
-      properties:
-        city:
-          type: string
-        country:
-          type: string
-        geo_hash:
-          type: string
-        latitude:
-          type: number
-        longitude:
-          type: number
-        state:
-          type: string
-        timezone:
-          type: string
-      required:
-      - country
-      - state
-      - city
-      - timezone
-      - longitude
-      - latitude
-      - geo_hash
     IpProvidersResponse:
       type: object
       properties:
@@ -406,36 +351,6 @@ components:
           $ref: '#/components/schemas/NetworkInfo'
       required:
       - ip
-    IpBatchRequest:
-      type: object
-      properties:
-        ips:
-          type: array
-          items:
-            type: string
-      required:
-      - ips
-    ActivityStatsBlock:
-      type: object
-      properties:
-        cadence:
-          type: string
-        median_per_hour:
-          type: integer
-          format: int64
-        p95_per_hour:
-          type: integer
-          format: int64
-        peak_hour:
-          type: integer
-        quiet_hour:
-          type: integer
-      required:
-      - peak_hour
-      - quiet_hour
-      - median_per_hour
-      - p95_per_hour
-      - cadence
     SubdomainEntry:
       type: object
       properties:
@@ -458,6 +373,102 @@ components:
       required:
       - port
       - count
+    ASNEntry:
+      type: object
+      properties:
+        asn:
+          type: integer
+        events:
+          type: integer
+          format: int64
+      required:
+      - asn
+      - events
+    NetworkInfo:
+      type: object
+      properties:
+        abuse_email:
+          type: string
+        abuse_phone:
+          type: string
+        asn:
+          type: integer
+        domain:
+          type: string
+        isp:
+          type: string
+        org:
+          type: string
+        type:
+          type: string
+      required:
+      - asn
+      - isp
+      - type
+    ProblemDetails:
+      type: object
+      properties:
+        detail:
+          type: string
+        instance:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - title
+      - status
+      - detail
+    ActivityStatsBlock:
+      type: object
+      properties:
+        cadence:
+          type: string
+        median_per_hour:
+          type: integer
+          format: int64
+        p95_per_hour:
+          type: integer
+          format: int64
+        peak_hour:
+          type: integer
+        quiet_hour:
+          type: integer
+      required:
+      - peak_hour
+      - quiet_hour
+      - median_per_hour
+      - p95_per_hour
+      - cadence
+    IpBatchRequest:
+      type: object
+      properties:
+        ips:
+          type: array
+          items:
+            type: string
+      required:
+      - ips
+    TimeSeriesEntry:
+      type: object
+      properties:
+        date:
+          type: integer
+          format: int64
+        events:
+          type: integer
+          format: int64
+        unique_ips:
+          type: integer
+          format: int64
+      required:
+      - date
+      - events
+      - unique_ips
     RecentEvent:
       type: object
       properties:
@@ -478,58 +489,47 @@ components:
       - target_subdomain
       - port
       - country_code
-    TimeSeriesEntry:
+    UniqueIPsBlock:
       type: object
       properties:
-        date:
+        sparkline_24h:
+          type: array
+          items:
+            type: integer
+            format: int64
+        value_24h:
           type: integer
           format: int64
-        events:
-          type: integer
-          format: int64
-        unique_ips:
+        value_30d:
           type: integer
           format: int64
       required:
-      - date
-      - events
-      - unique_ips
-    DeviceInfo:
+      - value_24h
+      - value_30d
+      - sparkline_24h
+    IpBatchResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/IpProvidersResponse'
+      required:
+      - results
+    ProviderEntry:
       type: object
       properties:
         last_seen:
           type: integer
           format: int64
-        os:
-          type: string
-        version:
-          type: string
-      required:
-      - os
-      - version
-      - last_seen
-    ValidationProblemDetails:
-      type: object
-      properties:
-        errors:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              type: string
-        instance:
-          type: string
-        status:
-          type: integer
-        title:
+        provider:
           type: string
         type:
           type: string
       required:
+      - provider
       - type
-      - title
-      - status
-      - errors
+      - last_seen
   securitySchemes:
     apiKeyAuth:
       type: apiKey
