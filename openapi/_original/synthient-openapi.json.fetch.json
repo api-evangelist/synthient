@@ -1,0 +1,12 @@
+{
+ "url": "https://api.synthient.com/openapi.json",
+ "requested_url": "https://api.synthient.com/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 372196,
+ "sha256": "44a493e5d2c64b4714dac1314d76ad7e89232ec6f5e7b72d44b3f700ba9c1476",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 1.0), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
