@@ -371,6 +371,71 @@ paths:
                 $ref: '#/components/schemas/ProblemDetails'
 components:
   schemas:
+    ExportListResponse:
+      type: object
+      properties:
+        feeds:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExportListItem'
+        next_cursor:
+          type: string
+        stream:
+          type: string
+      required:
+      - stream
+      - feeds
+    ProxyStreamEntry:
+      type: object
+      description: A single proxy event from the real-time proxy stream.
+      properties:
+        asn:
+          type: integer
+          format: int32
+          description: Autonomous System Number of the proxy IP
+        country_code:
+          type: string
+          description: ISO 3166-1 alpha-2 country code of the proxy IP
+        ip:
+          type: string
+          description: IPv4 or IPv6 address of the proxy
+        provider:
+          type: string
+          description: Provider name
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds since epoch, UTC)
+        type:
+          type: string
+          description: Proxy type (e.g. residential, datacenter, mobile)
+    ProblemDetails:
+      type: object
+      properties:
+        detail:
+          type: string
+        instance:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - title
+      - status
+      - detail
+    Schema:
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectedColumn'
+      required:
+      - fields
     ExportMetaResponse:
       type: object
       properties:
@@ -411,6 +476,16 @@ components:
       - kind
       - id
       - created_at
+    ProjectedColumn:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+      required:
+      - name
+      - type
     ExportListItem:
       type: object
       properties:
@@ -444,81 +519,6 @@ components:
       - id
       - created_at
       - download_path
-    Schema:
-      type: object
-      properties:
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProjectedColumn'
-      required:
-      - fields
-    ProblemDetails:
-      type: object
-      properties:
-        detail:
-          type: string
-        instance:
-          type: string
-        status:
-          type: integer
-        title:
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - title
-      - status
-      - detail
-    ProjectedColumn:
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          type: string
-      required:
-      - name
-      - type
-    ProxyStreamEntry:
-      type: object
-      description: A single proxy event from the real-time proxy stream.
-      properties:
-        asn:
-          type: integer
-          format: int32
-          description: Autonomous System Number of the proxy IP
-        country_code:
-          type: string
-          description: ISO 3166-1 alpha-2 country code of the proxy IP
-        ip:
-          type: string
-          description: IPv4 or IPv6 address of the proxy
-        provider:
-          type: string
-          description: Provider name
-        timestamp:
-          type: integer
-          format: int64
-          description: Unix timestamp (seconds since epoch, UTC)
-        type:
-          type: string
-          description: Proxy type (e.g. residential, datacenter, mobile)
-    ExportListResponse:
-      type: object
-      properties:
-        feeds:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExportListItem'
-        next_cursor:
-          type: string
-        stream:
-          type: string
-      required:
-      - stream
-      - feeds
   securitySchemes:
     apiKeyAuth:
       type: apiKey

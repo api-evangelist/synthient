@@ -371,19 +371,86 @@ paths:
                 $ref: '#/components/schemas/ProblemDetails'
 components:
   schemas:
-    TorrentPeerEntry:
+    ExportListResponse:
       type: object
       properties:
-        encrypted:
-          type: boolean
-        ip:
+        feeds:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExportListItem'
+        next_cursor:
           type: string
-          description: IPv4 or IPv6 address of the peer
-        port:
+        stream:
+          type: string
+      required:
+      - stream
+      - feeds
+    TorrentStreamEntry:
+      type: object
+      properties:
+        file_count:
           type: integer
-        source:
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/TorrentFileEntry'
+        info_hash:
           type: string
-          description: DHT, PEX, or tracker
+          description: 40-character hex SHA-1 info hash
+        magnet_uri:
+          type: string
+        name:
+          type: string
+          description: Torrent name from metadata
+        peers:
+          type: array
+          items:
+            $ref: '#/components/schemas/TorrentPeerEntry'
+        piece_length:
+          type: integer
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds since epoch, UTC)
+        total_size:
+          type: integer
+          format: int64
+          description: Total size of files in bytes
+    TorrentFileEntry:
+      type: object
+      properties:
+        length:
+          type: integer
+          format: int64
+        path:
+          type: string
+    ProblemDetails:
+      type: object
+      properties:
+        detail:
+          type: string
+        instance:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - title
+      - status
+      - detail
+    Schema:
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectedColumn'
+      required:
+      - fields
     ExportMetaResponse:
       type: object
       properties:
@@ -424,15 +491,29 @@ components:
       - kind
       - id
       - created_at
-    Schema:
+    TorrentPeerEntry:
       type: object
       properties:
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProjectedColumn'
+        encrypted:
+          type: boolean
+        ip:
+          type: string
+          description: IPv4 or IPv6 address of the peer
+        port:
+          type: integer
+        source:
+          type: string
+          description: DHT, PEX, or tracker
+    ProjectedColumn:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
       required:
-      - fields
+      - name
+      - type
     ExportListItem:
       type: object
       properties:
@@ -466,87 +547,6 @@ components:
       - id
       - created_at
       - download_path
-    ProblemDetails:
-      type: object
-      properties:
-        detail:
-          type: string
-        instance:
-          type: string
-        status:
-          type: integer
-        title:
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - title
-      - status
-      - detail
-    ProjectedColumn:
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          type: string
-      required:
-      - name
-      - type
-    TorrentFileEntry:
-      type: object
-      properties:
-        length:
-          type: integer
-          format: int64
-        path:
-          type: string
-    TorrentStreamEntry:
-      type: object
-      properties:
-        file_count:
-          type: integer
-        files:
-          type: array
-          items:
-            $ref: '#/components/schemas/TorrentFileEntry'
-        info_hash:
-          type: string
-          description: 40-character hex SHA-1 info hash
-        magnet_uri:
-          type: string
-        name:
-          type: string
-          description: Torrent name from metadata
-        peers:
-          type: array
-          items:
-            $ref: '#/components/schemas/TorrentPeerEntry'
-        piece_length:
-          type: integer
-        timestamp:
-          type: integer
-          format: int64
-          description: Unix timestamp (seconds since epoch, UTC)
-        total_size:
-          type: integer
-          format: int64
-          description: Total size of files in bytes
-    ExportListResponse:
-      type: object
-      properties:
-        feeds:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExportListItem'
-        next_cursor:
-          type: string
-        stream:
-          type: string
-      required:
-      - stream
-      - feeds
   securitySchemes:
     apiKeyAuth:
       type: apiKey

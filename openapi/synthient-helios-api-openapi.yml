@@ -1448,6 +1448,58 @@ paths:
                 $ref: '#/components/schemas/ProblemDetails'
 components:
   schemas:
+    ExportListResponse:
+      type: object
+      properties:
+        feeds:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExportListItem'
+        next_cursor:
+          type: string
+        stream:
+          type: string
+      required:
+      - stream
+      - feeds
+    HoneypotMeta:
+      type: object
+      properties:
+        pool_id:
+          type: string
+          description: Pool identifier
+        provider:
+          type: string
+          description: Provider name
+        proxy_ip:
+          type: string
+          description: Source proxy IP address
+        server:
+          type: string
+          description: Honeypot server identifier
+    HoneypotHTTPSStreamEntry:
+      type: object
+      properties:
+        details:
+          type: string
+          description: TLS ClientHello details as a JSON-encoded string (cipher suites, extensions, supported curves, ALPN)
+        domain:
+          type: string
+        meta:
+          $ref: '#/components/schemas/HoneypotMeta'
+        port:
+          type: integer
+        raw:
+          type: string
+          format: byte
+          description: Base64-encoded raw ClientHello bytes; omitted when not captured.
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix timestamp (seconds since epoch, UTC)
+        tunnel_id:
+          type: integer
+          format: int64
     HoneypotDNSStreamEntry:
       type: object
       properties:
@@ -1497,6 +1549,48 @@ components:
         tunnel_id:
           type: integer
           format: int64
+    ProblemDetails:
+      type: object
+      properties:
+        detail:
+          type: string
+        instance:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - title
+      - status
+      - detail
+    Schema:
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectedColumn'
+      required:
+      - fields
+    HoneypotADBStreamEntry:
+      type: object
+      properties:
+        command:
+          type: string
+          format: byte
+          description: Shell command executed (base64-encoded bytes)
+        hash:
+          type: string
+          description: Command hash
+        sequential_id:
+          type: integer
+        session:
+          type: string
+          description: ADB session hash
     ExportMetaResponse:
       type: object
       properties:
@@ -1537,6 +1631,16 @@ components:
       - kind
       - id
       - created_at
+    ProjectedColumn:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+      required:
+      - name
+      - type
     ExportListItem:
       type: object
       properties:
@@ -1570,110 +1674,6 @@ components:
       - id
       - created_at
       - download_path
-    Schema:
-      type: object
-      properties:
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProjectedColumn'
-      required:
-      - fields
-    ProblemDetails:
-      type: object
-      properties:
-        detail:
-          type: string
-        instance:
-          type: string
-        status:
-          type: integer
-        title:
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - title
-      - status
-      - detail
-    ProjectedColumn:
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          type: string
-      required:
-      - name
-      - type
-    HoneypotADBStreamEntry:
-      type: object
-      properties:
-        command:
-          type: string
-          format: byte
-          description: Shell command executed (base64-encoded bytes)
-        hash:
-          type: string
-          description: Command hash
-        sequential_id:
-          type: integer
-        session:
-          type: string
-          description: ADB session hash
-    HoneypotMeta:
-      type: object
-      properties:
-        pool_id:
-          type: string
-          description: Pool identifier
-        provider:
-          type: string
-          description: Provider name
-        proxy_ip:
-          type: string
-          description: Source proxy IP address
-        server:
-          type: string
-          description: Honeypot server identifier
-    ExportListResponse:
-      type: object
-      properties:
-        feeds:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExportListItem'
-        next_cursor:
-          type: string
-        stream:
-          type: string
-      required:
-      - stream
-      - feeds
-    HoneypotHTTPSStreamEntry:
-      type: object
-      properties:
-        details:
-          type: string
-          description: TLS ClientHello details as a JSON-encoded string (cipher suites, extensions, supported curves, ALPN)
-        domain:
-          type: string
-        meta:
-          $ref: '#/components/schemas/HoneypotMeta'
-        port:
-          type: integer
-        raw:
-          type: string
-          format: byte
-          description: Base64-encoded raw ClientHello bytes; omitted when not captured.
-        timestamp:
-          type: integer
-          format: int64
-          description: Unix timestamp (seconds since epoch, UTC)
-        tunnel_id:
-          type: integer
-          format: int64
   securitySchemes:
     apiKeyAuth:
       type: apiKey
